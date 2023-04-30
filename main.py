@@ -11,6 +11,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 i = 0
+ogreHp=15
 
 # data for player posioton, width and height
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
@@ -43,11 +44,11 @@ while running:
     player = Player(player_pos, flag)
     screen.blit(player.image, player_pos)
     if i == 0:
-        ogre = Ogre(ogrepos, dt, flag, )
-        ogre1 = Ogre(ogrepos1, dt, flag, )
+        ogre = Ogre(ogrepos, dt, flag, ogreHp)
+        ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
     else:
-        ogre = Ogre(updated, dt, flag, )
-        ogre1 = Ogre(updated1, dt, flag, )
+        ogre = Ogre(updated, dt, flag, ogreHp)
+        ogre1 = Ogre(updated1, dt, flag, ogreHp)
     lockedPosOgre = ogre.pos
     lockedPosOgre1 = ogre1.pos
 
@@ -63,11 +64,10 @@ while running:
     screen.blit(ogre1.image, ogre1.pos)
     if (player.player_pos.x >= ogre.influenceSpherex.x) & (player.player_pos.x <= ogre.influenceSpherex.y) \
             & (player.player_pos.y >= ogre.influenceSpherey.x) & (player.player_pos.y <= ogre.influenceSpherey.y):
-        battleView = BattleView(screen, int(ogre.hp), int(player.hp), flag)
+        battleView = BattleView(screen, player, ogre, flag)
         background = pygame.image.load("Graphics/BattleView.png").convert()
         background = pygame.transform.scale(background, (width, height))
         flag = True
-
     if (player.player_pos.x >= ogre1.influenceSpherex.x) & (player.player_pos.x <= ogre1.influenceSpherex.y) \
             & (player.player_pos.y >= ogre1.influenceSpherey.x) & (player.player_pos.y <= ogre1.influenceSpherey.y):
         running = False

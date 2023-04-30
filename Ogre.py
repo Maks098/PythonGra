@@ -4,13 +4,13 @@ import threading
 
 
 class Ogre():
-    def __init__(self, pos, dt,flag):
+    def __init__(self, pos, dt,flag,hp):
         self.image = pygame.image.load("Graphics/Ogre.png").convert_alpha()
         self.pos = pygame.Vector2(pos)
         self.influenceSpherex = pygame.Vector2(pos.x - 20, pos.x + 20)
         self.influenceSpherey = pygame.Vector2(pos.y - 20, pos.y + 30)
         self.dt = dt
-        self.hp=15
+        self.hp=hp
         self.flag=flag
         if flag==True:
             self.image=pygame.image.load("Graphics/blank.png").convert_alpha()
@@ -33,3 +33,6 @@ class Ogre():
                 elif posx == 1:
                     self.pos.x += 100 * self.dt
 
+    def getDamage(self,damage):
+        self.hp=self.hp-damage
+        print(self.hp)
