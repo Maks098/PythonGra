@@ -7,11 +7,14 @@ class Ogre():
     def __init__(self, pos, dt,flag,hp):
         self.image = pygame.image.load("Graphics/Ogre.png").convert_alpha()
         self.pos = pygame.Vector2(pos)
-        self.influenceSpherex = pygame.Vector2(pos.x - 20, pos.x + 20)
-        self.influenceSpherey = pygame.Vector2(pos.y - 20, pos.y + 30)
+        self.influenceSpherex = pygame.Vector2(self.pos.x - 20, self.pos.x + 20)
+        self.influenceSpherey = pygame.Vector2(self.pos.y - 20, self.pos.y + 20)
         self.dt = dt
         self.hp=hp
         self.flag=flag
+        self.strength=1
+        self.agility=2
+        self.maxhp=hp
         if flag==True:
             self.image=pygame.image.load("Graphics/blank.png").convert_alpha()
 
@@ -36,3 +39,7 @@ class Ogre():
     def getDamage(self,damage):
         self.hp=self.hp-damage
         print(self.hp)
+
+    def updateSOF(self):
+        self.influenceSpherex = pygame.Vector2(self.pos.x - 20, self.pos.x + 20)
+        self.influenceSpherey = pygame.Vector2(self.pos.y - 20, self.pos.y + 30)
