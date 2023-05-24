@@ -9,7 +9,7 @@ class BattleView:
         self.player = player
         #self.startBattle(screen, player, enemy, flag,background)
 
-
+#a
     def startBattle(self, screen, player, enemy, flag,background):
         playerRatio=player.hp/player.maxhp
         enemyRatio=enemy.hp/enemy.maxhp
