@@ -3,14 +3,15 @@ from pynput import mouse
 
 
 class BattleView:
-    def __init__(self, screen, player, flag,background):
+    def __init__(self, screen, player, flag):
         #self.enemy = enemy
         self.flag=flag
         self.player = player
+
         #self.startBattle(screen, player, enemy, flag,background)
 
 #a
-    def startBattle(self, screen, player, enemy, flag,background):
+    def startBattle(self, screen, player, enemy, attack):
         playerRatio=player.hp/player.maxhp
         enemyRatio=enemy.hp/enemy.maxhp
         if (player.hp <= 0) | (enemy.hp <= 0):
@@ -27,10 +28,7 @@ class BattleView:
         enemyHpImg = font.render('Życie przeciwnika', True, "black")
         screen.blit(playerHpImg, (300,250))
         screen.blit(enemyHpImg, (1525, 250))
-        if ((pygame.mouse.get_pressed()[0] == 1) & (pygame.mouse.get_pos() < (600, 500)) & (
-                pygame.mouse.get_pos() > (400, 300))):
-
-
+        if (attack==True):
             enemy.getDamage(player.strength)
             player.getDamage(enemy.strength)
             print("HP GRACZA: "+str(player.hp))

@@ -5,14 +5,18 @@ from BattleView import BattleView
 import random
 import threading
 
+
 def hideAllCreatures(list):
     for j in ogresList:
         j.image = pygame.image.load("Graphics/blank.png").convert_alpha()
     player.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+
+
 def showAllCreatures(list):
     for j in list:
         j.image = pygame.image.load("Graphics/Ogre.png").convert_alpha()
     player.image = pygame.image.load("Graphics/PlayerTest.png").convert_alpha()
+
 
 # pygame setup
 pygame.init()
@@ -39,29 +43,33 @@ updated = 0
 # setup
 i = 0
 ogreHp = 15
-isFighting=False
+isFighting = False
 player = Player(player_pos, flag)
 ogre = Ogre(ogrepos, dt, flag, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, flag, ogreHp)
-
+attack=False
 ogresList = [ogre, ogre1, ogre2]
 pygame.display.flip()
 # starting loop
 while running:
-
-    battleView = BattleView(screen, player,flag, background)
-    flag=battleView.flag
+    battleView = BattleView(screen, player, flag)
+    attack = False
+    flag = battleView.flag
     screen.blit(background, (0, 0))
     # looking for events
     for event in pygame.event.get():
         # quitting game
         if event.type == pygame.QUIT:
             running = False
-    ogresPos=[None]*len(ogresList)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if (pygame.mouse.get_pos() < (600, 500)) & (
+                    pygame.mouse.get_pos() > (400, 300)):
+                attack = True
+    ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
-        ogresPos[q]=ogresList[q].pos
+        ogresPos[q] = ogresList[q].pos
 
     for ogref in ogresList:
         if flag == False:
@@ -90,29 +98,29 @@ while running:
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
             flag = True
-            battleView.startBattle(screen,battleView.player,aoi,flag,background)
+            battleView.startBattle(screen, battleView.player, aoi, attack)
 
-    if player.hp<=0:
+    if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
         background = pygame.transform.scale(background, (width, height))
-        flag=True
+        flag = True
 
     for check in ogresList:
-        if check.hp<=0:
+        if check.hp <= 0:
             player.exp = player.exp + 3
-            flag=False
+            flag = False
             ogresList.sort(key=lambda x: x.hp)
             ogresPos.remove(check.pos)
             ogresList.remove(check)
             showAllCreatures(ogresList)
             background = pygame.image.load("Graphics/maxresdefault.jpg")
             background = pygame.transform.scale(background, (width, height))
-    #if player.exp==3:
-        #background = pygame.image.load("Graphics/lvlup.png")
-        #background = pygame.transform.scale(background, (width, height))
+    # if player.exp==3:
+    # background = pygame.image.load("Graphics/lvlup.png")
+    # background = pygame.transform.scale(background, (width, height))
 
-    if flag==True:
+    if flag == True:
         for ogref in ogresList:
             if flag == False:
                 isMoving = bool(random.getrandbits(1))
@@ -127,11 +135,6 @@ while running:
                         ogref.pos.x += -100 * dt
                     elif posx == 1:
                         ogref.pos.x += 100 * dt
-
-
-
-
-
 
     keys = pygame.key.get_pressed()
     if flag == False:
@@ -149,4 +152,4 @@ while running:
     dt = clock.tick(60) / 1000
     i = i + 1
 pygame.quit()
-#def showAllCreatures(list):
+# def showAllCreatures(list):
