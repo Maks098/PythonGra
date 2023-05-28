@@ -30,9 +30,9 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 width = screen.get_width()
 height = screen.get_height()
 
-ogrepos = pygame.Vector2(700, 500)
-ogrepos1 = pygame.Vector2(1000, 500)
-ogrepos2 = pygame.Vector2(500, 300)
+ogrepos = pygame.Vector2(width*0.3,height*0.7)
+ogrepos1 = pygame.Vector2(width*0.6, height*0.5)
+ogrepos2 = pygame.Vector2(width*0.4,height*0.6)
 
 flag = False
 # background setup
@@ -48,24 +48,35 @@ player = Player(player_pos, flag)
 ogre = Ogre(ogrepos, dt, flag, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, flag, ogreHp)
-attack=False
+attack = False
+defend = False
 ogresList = [ogre, ogre1, ogre2]
 pygame.display.flip()
+
 # starting loop
 while running:
-    battleView = BattleView(screen, player, flag)
+    mousePos = pygame.mouse.get_pos()
+    battleView = BattleView(flag)
     attack = False
+    defend = False
+    runAttempt=False
     flag = battleView.flag
     screen.blit(background, (0, 0))
     # looking for events
+    pygame.draw.rect(screen,"red",(width*0.7,height*0.8,20,20))
+    pygame.draw.rect(screen, "red", (width * 0.9, height * 0.8, 20, 20))
     for event in pygame.event.get():
         # quitting game
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if (pygame.mouse.get_pos() < (600, 500)) & (
-                    pygame.mouse.get_pos() > (400, 300)):
+            if (mousePos[0] > width * 0.1) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.2) & (mousePos[1] < height * 0.85):
                 attack = True
+            elif (mousePos[0] > width * 0.4) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.5) & (mousePos[1] < height * 0.85):
+                defend = True
+            elif (mousePos[0] > width * 0.7) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.9) & (mousePos[1] < height * 0.85):
+                runAttempt = True
+
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -98,7 +109,7 @@ while running:
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
             flag = True
-            battleView.startBattle(screen, battleView.player, aoi, attack)
+            battleView.startBattle(screen, player, aoi, attack)
 
     if player.hp <= 0:
         hideAllCreatures(ogresList)
