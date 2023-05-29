@@ -52,6 +52,7 @@ ogresList = [ogre, ogre1, ogre2]
 city=City(screen)
 pygame.display.flip()
 menu = False
+inCity = False
 # starting loop
 while running:
     click = False
@@ -64,7 +65,7 @@ while running:
     resume = False
     exitButton = False
     enteringCity = False
-    inCity = False
+
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -116,21 +117,34 @@ while running:
 
     screen.blit(city.image, (width * 0.5, height * 0.4))
     screen.blit(player.image, player_pos)
-    if (player.player_pos.x>=width*0.49) &(player.player_pos.y>=height*0.39)&(player.player_pos.x<=width*0.52)&(player.player_pos.y<=height*0.46):
-        screen.blit(pygame.image.load("Graphics/enter.png").convert(),(width*0.44,height*0.3))
-        if enteringCity:
-            inCity=True
-
+    if not inCity:
+        if (player.player_pos.x>=width*0.49) &(player.player_pos.y>=height*0.39)&(player.player_pos.x<=width*0.52)&(player.player_pos.y<=height*0.46):
+            screen.blit(pygame.image.load("Graphics/enter.png").convert(),(width*0.44,height*0.3))
+            if enteringCity:
+                inCity=True
     if inCity:
         background = pygame.image.load("Graphics/city.png").convert_alpha()
+        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
         flag = True
         hideAllCreatures(ogresList)
-
         screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
         screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
         screen.blit(pygame.image.load("Graphics/leave.png").convert(), (width * 0.75, height * 0.8))
-        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        player.player_pos.y = player.player_pos.y + 40
+        if attackOrHeal:
+            player.hp=player.maxhp
+        elif defendOrUpgrade:
+            print("Do zaimplementowania")
+        elif runAttemptOrLeave:
+            flag=False
+            showAllCreatures(ogresList)
+            inCity=False
+            city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
+            background=pygame.image.load("Graphics/maxresdefault.jpg").convert()
+            background = pygame.transform.scale(background, (width, height))
+        #player.player_pos.y = height/2
+
+
+
 
     for a in range(len(ogresList)):
         screen.blit(ogresList[a].image, ogresPos[a])
