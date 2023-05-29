@@ -12,9 +12,10 @@ class Ogre():
         self.dt = dt
         self.hp=hp
         self.flag=flag
-        self.strength=1
+        self.strength=3
         self.agility=2
         self.maxhp=hp
+        self.armor=1
         if flag==True:
             self.image=pygame.image.load("Graphics/blank.png").convert_alpha()
 
@@ -37,8 +38,7 @@ class Ogre():
                     self.pos.x += 100 * self.dt
 
     def getDamage(self,damage):
-        self.hp=self.hp-damage
-        print(self.hp)
+        self.hp=self.hp-(damage-self.armor)
 
     def updateSOF(self):
         self.influenceSpherex = pygame.Vector2(self.pos.x - 20, self.pos.x + 20)

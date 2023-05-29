@@ -30,9 +30,9 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 width = screen.get_width()
 height = screen.get_height()
 
-ogrepos = pygame.Vector2(width*0.3,height*0.7)
-ogrepos1 = pygame.Vector2(width*0.6, height*0.5)
-ogrepos2 = pygame.Vector2(width*0.4,height*0.6)
+ogrepos = pygame.Vector2(width * 0.3, height * 0.7)
+ogrepos1 = pygame.Vector2(width * 0.6, height * 0.5)
+ogrepos2 = pygame.Vector2(width * 0.4, height * 0.6)
 
 flag = False
 # background setup
@@ -48,34 +48,46 @@ player = Player(player_pos, flag)
 ogre = Ogre(ogrepos, dt, flag, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, flag, ogreHp)
-attack = False
-defend = False
 ogresList = [ogre, ogre1, ogre2]
 pygame.display.flip()
-
+menu = False
 # starting loop
 while running:
+    click = False
     mousePos = pygame.mouse.get_pos()
-    battleView = BattleView(flag)
+    runSuccesful = False
+    battleView = BattleView(flag, runSuccesful)
     attack = False
     defend = False
-    runAttempt=False
+    runAttempt = False
+    resume = False
+    exitButton = False
+
     flag = battleView.flag
     screen.blit(background, (0, 0))
     # looking for events
-    pygame.draw.rect(screen,"red",(width*0.7,height*0.8,20,20))
-    pygame.draw.rect(screen, "red", (width * 0.9, height * 0.8, 20, 20))
     for event in pygame.event.get():
         # quitting game
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if (mousePos[0] > width * 0.1) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.2) & (mousePos[1] < height * 0.85):
+            if (mousePos[0] > width * 0.1) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.25) & (
+                    mousePos[1] < height * 0.9):
                 attack = True
-            elif (mousePos[0] > width * 0.4) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.5) & (mousePos[1] < height * 0.85):
+            elif (mousePos[0] > width * 0.4) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.55) & (
+                    mousePos[1] < height * 0.9):
                 defend = True
-            elif (mousePos[0] > width * 0.7) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.9) & (mousePos[1] < height * 0.85):
+            elif (mousePos[0] > width * 0.75) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.90) & (
+                    mousePos[1] < height * 0.9):
                 runAttempt = True
+            elif (mousePos[0] > width * 0.41) & (mousePos[1] > height * 0.48) & (mousePos[0] < width * 0.54) & (
+                    mousePos[1] < height * 0.53):
+                resume = True
+            elif (mousePos[0] > width * 0.40) & (mousePos[1] > height * 0.56) & (mousePos[0] < width * 0.56) & (
+                    mousePos[1] < height * 0.62):
+                exitButton = True
+            else:
+                click = True
 
     ogresPos = [None] * len(ogresList)
 
@@ -102,20 +114,25 @@ while running:
         screen.blit(ogresList[a].image, ogresPos[a])
         ogresList[a].updateSOF()
 
-    for aoi in ogresList:
-        if (player.player_pos.x >= aoi.influenceSpherex.x) & (player.player_pos.x <= aoi.influenceSpherex.y) \
-                & (player.player_pos.y >= aoi.influenceSpherey.x) & (player.player_pos.y <= aoi.influenceSpherey.y):
+    for ogre in ogresList:
+        if (player.player_pos.x >= ogre.influenceSpherex.x) & (player.player_pos.x <= ogre.influenceSpherex.y) \
+                & (player.player_pos.y >= ogre.influenceSpherey.x) & (player.player_pos.y <= ogre.influenceSpherey.y):
             background = pygame.image.load("Graphics/BattleView.png").convert()
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
             flag = True
-            battleView.startBattle(screen, player, aoi, attack)
+            battleView.startBattle(screen, player, ogre, attack, defend, runAttempt, runSuccesful, click)
 
     if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
         background = pygame.transform.scale(background, (width, height))
         flag = True
+    if battleView.runSuccesful:
+        showAllCreatures(ogresList)
+        background = pygame.image.load("Graphics/maxresdefault.jpg")
+        background = pygame.transform.scale(background, (width, height))
+        flag = False
 
     for check in ogresList:
         if check.hp <= 0:
@@ -157,6 +174,24 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
+        if keys[pygame.K_ESCAPE]:
+            flag = True
+            menu = True
+    if menu:
+        pauseBackground = pygame.Surface((width, height))
+        pauseBackground.set_alpha(150)
+        pauseBackground.fill((0, 0, 0))
+        screen.blit(pauseBackground, (0, 0))
+        pause = pygame.image.load("Graphics/pause.png").convert()
+        screen.blit(pause, (width * 0.33, height * 0.32))
+        if resume:
+            flag = False
+            pause.fill((0, 0, 0, 0))
+            pauseBackground.set_alpha(255)
+            screen.blit(pauseBackground, (0, 0))
+            menu = False
+        elif exitButton:
+            exit(0)
 
     pygame.display.flip()
 

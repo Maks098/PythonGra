@@ -10,7 +10,8 @@ class Player():
         self.agility=5
         self.strength=5
         self.maxhp=10
+        self.armor=2
         if flag == True:
             self.image = pygame.image.load("Graphics/blank.png").convert_alpha()
     def getDamage(self,damage):
-        self.hp=self.hp-damage
+        self.hp=self.hp-(damage-self.armor)
