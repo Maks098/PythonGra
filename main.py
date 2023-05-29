@@ -64,6 +64,7 @@ while running:
     resume = False
     exitButton = False
     enteringCity = False
+    inCity = False
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -118,11 +119,18 @@ while running:
     if (player.player_pos.x>=width*0.49) &(player.player_pos.y>=height*0.39)&(player.player_pos.x<=width*0.52)&(player.player_pos.y<=height*0.46):
         screen.blit(pygame.image.load("Graphics/enter.png").convert(),(width*0.44,height*0.3))
         if enteringCity:
-            background=pygame.image.load("Graphics/city.png").convert_alpha()
-            flag=True
-            hideAllCreatures(ogresList)
-            city.image=pygame.image.load("Graphics/blank.png").convert_alpha()
-            player.player_pos.y=player.player_pos.y+40
+            inCity=True
+
+    if inCity:
+        background = pygame.image.load("Graphics/city.png").convert_alpha()
+        flag = True
+        hideAllCreatures(ogresList)
+
+        screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
+        screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
+        screen.blit(pygame.image.load("Graphics/leave.png").convert(), (width * 0.75, height * 0.8))
+        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        player.player_pos.y = player.player_pos.y + 40
 
     for a in range(len(ogresList)):
         screen.blit(ogresList[a].image, ogresPos[a])
