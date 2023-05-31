@@ -125,6 +125,7 @@ while running:
     if inCity:
         background = pygame.image.load("Graphics/city.png").convert_alpha()
         city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        background = pygame.transform.scale(background, (width, height))
         flag = True
         hideAllCreatures(ogresList)
         screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
@@ -141,7 +142,6 @@ while running:
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background=pygame.image.load("Graphics/maxresdefault.jpg").convert()
             background = pygame.transform.scale(background, (width, height))
-        #player.player_pos.y = height/2
 
 
 
@@ -233,4 +233,3 @@ while running:
     dt = clock.tick(60) / 1000
     i = i + 1
 pygame.quit()
-

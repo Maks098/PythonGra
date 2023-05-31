@@ -1,5 +1,5 @@
 import pygame
-from pynput import mouse
+
 
 
 class BattleView:
@@ -24,8 +24,8 @@ class BattleView:
         font = pygame.font.SysFont(None, 40)
         playerHpImg = font.render('Życie gracza', True, "black")
         enemyHpImg = font.render('Życie przeciwnika', True, "black")
-        screen.blit(playerHpImg, (300, 250))
-        screen.blit(enemyHpImg, (1525, 250))
+        screen.blit(playerHpImg, ( width*0.15, height* 0.23))
+        screen.blit(enemyHpImg, (width*0.79, height* 0.23))
         if attack:
             enemy.getDamage(player.strength)
             player.getDamage(enemy.strength)
