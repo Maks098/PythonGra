@@ -203,13 +203,7 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
-    # for event in pygame.event.get():
-    # if event.type==pygame.KEYDOWN:
-    #  if event.key==pygame.K_ESCAPE:
 
-    # if keys[pygame.K_ESCAPE]:
-    #     occupied = not occupied
-    #     menu = not menu
     if menu:
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
