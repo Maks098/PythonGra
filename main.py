@@ -83,13 +83,13 @@ while running:
             elif (mousePos[0] > width * 0.75) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.90) & (
                     mousePos[1] < height * 0.9):
                 runAttemptOrLeave = True
-            elif (mousePos[0] > width * 0.41) & (mousePos[1] > height * 0.48) & (mousePos[0] < width * 0.54) & (
+            elif (mousePos[0] > width * 0.42) & (mousePos[1] > height * 0.48) & (mousePos[0] < width * 0.53) & (
                     mousePos[1] < height * 0.53):
                 resume = True
-            elif (mousePos[0] > width * 0.40) & (mousePos[1] > height * 0.56) & (mousePos[0] < width * 0.56) & (
-                    mousePos[1] < height * 0.62):
+            elif (mousePos[0] > width * 0.40) & (mousePos[1] > height * 0.56) & (mousePos[0] < width * 0.57) & (
+                    mousePos[1] < height * 0.63):
                 exitButton = True
-            elif (mousePos[0] > width * 0.40) & (mousePos[1] > height * 0.3) & (mousePos[0] < width * 0.59) & (
+            elif (mousePos[0] > width * 0.44) & (mousePos[1] > height * 0.3) & (mousePos[0] < width * 0.59) & (
                     mousePos[1] < height * 0.38):
                 enteringCity=True
             else:
@@ -219,6 +219,7 @@ while running:
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
         pauseBackground.fill((0, 0, 0))
+        pauseBackground=pygame.transform.scale(pauseBackground, (width, height))
         screen.blit(pauseBackground, (0, 0))
         pause = pygame.image.load("Graphics/pause.png").convert()
         screen.blit(pause, (width * 0.33, height * 0.32))
