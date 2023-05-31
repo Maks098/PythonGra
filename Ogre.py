@@ -22,20 +22,7 @@ class Ogre():
 
 
 
-    def randomWalk(self):
-        if self.flag==False:
-            isMoving = bool(random.getrandbits(1))
-            if isMoving == True:
-                posy = random.randint(-1, 10)
-                posx = random.randint(-1, 10)
-                if posy == -1:
-                    self.pos.y -= 100 * self.dt
-                elif posy == 1:
-                    self.pos.y += 100 * self.dt
-                if posx == -1:
-                    self.pos.x += -100 * self.dt
-                elif posx == 1:
-                    self.pos.x += 100 * self.dt
+
 
     def getDamage(self,damage):
         self.hp=self.hp-(damage-self.armor)

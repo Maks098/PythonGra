@@ -49,23 +49,24 @@ ogre = Ogre(ogrepos, dt, flag, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, flag, ogreHp)
 ogresList = [ogre, ogre1, ogre2]
-city=City(screen)
+city = City(screen)
 pygame.display.flip()
 menu = False
 inCity = False
+runSuccesful = False
+battleView = BattleView(flag, runSuccesful)
 # starting loop
 while running:
     click = False
     mousePos = pygame.mouse.get_pos()
-    runSuccesful = False
-    battleView = BattleView(flag, runSuccesful)
+
+
     attackOrHeal = False
     defendOrUpgrade = False
     runAttemptOrLeave = False
     resume = False
     exitButton = False
     enteringCity = False
-
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -74,27 +75,27 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if (mousePos[0] > width * 0.1) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.25) & (
-                    mousePos[1] < height * 0.9):
+            if (mousePos[0] >= width * 0.1) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.25) & (
+                    mousePos[1] <= height * 0.9):
                 attackOrHeal = True
-            elif (mousePos[0] > width * 0.4) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.55) & (
-                    mousePos[1] < height * 0.9):
+            elif (mousePos[0] >= width * 0.4) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.55) & (
+                    mousePos[1] <= height * 0.9):
                 defendOrUpgrade = True
-            elif (mousePos[0] > width * 0.75) & (mousePos[1] > height * 0.8) & (mousePos[0] < width * 0.90) & (
-                    mousePos[1] < height * 0.9):
+            elif (mousePos[0] >= width * 0.75) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.90) & (
+                    mousePos[1] <= height * 0.9):
                 runAttemptOrLeave = True
-            elif (mousePos[0] > width * 0.42) & (mousePos[1] > height * 0.48) & (mousePos[0] < width * 0.53) & (
-                    mousePos[1] < height * 0.53):
+            elif (mousePos[0] >= width * 0.44) & (mousePos[1] >= height * 0.47) & (mousePos[0] <= width * 0.56) & (
+                    mousePos[1] <= height * 0.53):
                 resume = True
-            elif (mousePos[0] > width * 0.40) & (mousePos[1] > height * 0.56) & (mousePos[0] < width * 0.57) & (
-                    mousePos[1] < height * 0.63):
+            elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
+                    mousePos[1] <= height * 0.62):
                 exitButton = True
-            elif (mousePos[0] > width * 0.44) & (mousePos[1] > height * 0.3) & (mousePos[0] < width * 0.59) & (
-                    mousePos[1] < height * 0.38):
-                enteringCity=True
+            elif (mousePos[0] >= width * 0.44) & (mousePos[1] >= height * 0.3) & (mousePos[0] <= width * 0.59) & (
+                    mousePos[1] <= height * 0.38):
+                enteringCity = True
             else:
                 click = True
-    print(mousePos)
+
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -104,24 +105,29 @@ while running:
         if flag == False:
             isMoving = bool(random.getrandbits(1))
             if isMoving == True:
-                posy = random.randint(-1, 1)
-                posx = random.randint(-1, 1)
-                if posy == -1:
-                    ogref.pos.y -= 100 * dt
-                elif posy == 1:
-                    ogref.pos.y += 100 * dt
-                if posx == -1:
-                    ogref.pos.x += -100 * dt
-                elif posx == 1:
-                    ogref.pos.x += 100 * dt
-
+                whichDirection = bool(random.getrandbits(1))
+                if whichDirection == True:
+                    # vertical
+                    posy = random.randint(-1, 1)
+                    if posy == -1:
+                        ogref.pos.y -= 100 * dt
+                    elif posy == 1:
+                        ogref.pos.y += 100 * dt
+                else:
+                    posx = random.randint(-1, 1)
+                    if posx == -1:
+                        ogref.pos.x += -100 * dt
+                    elif posx == 1:
+                        ogref.pos.x += 100 * dt
+    print(clock.tick())
     screen.blit(city.image, (width * 0.5, height * 0.4))
     screen.blit(player.image, player_pos)
     if not inCity:
-        if (player.player_pos.x>=width*0.49) &(player.player_pos.y>=height*0.39)&(player.player_pos.x<=width*0.52)&(player.player_pos.y<=height*0.46):
-            screen.blit(pygame.image.load("Graphics/enter.png").convert(),(width*0.44,height*0.3))
+        if (player.player_pos.x >= width * 0.49) & (player.player_pos.y >= height * 0.39) & (
+                player.player_pos.x <= width * 0.52) & (player.player_pos.y <= height * 0.46):
+            screen.blit(pygame.image.load("Graphics/enter.png").convert(), (width * 0.44, height * 0.3))
             if enteringCity:
-                inCity=True
+                inCity = True
     if inCity:
         background = pygame.image.load("Graphics/city.png").convert_alpha()
         city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
@@ -132,19 +138,16 @@ while running:
         screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
         screen.blit(pygame.image.load("Graphics/leave.png").convert(), (width * 0.75, height * 0.8))
         if attackOrHeal:
-            player.hp=player.maxhp
+            player.hp = player.maxhp
         elif defendOrUpgrade:
             print("Do zaimplementowania")
         elif runAttemptOrLeave:
-            flag=False
+            flag = False
             showAllCreatures(ogresList)
-            inCity=False
+            inCity = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-            background=pygame.image.load("Graphics/maxresdefault.jpg").convert()
+            background = pygame.image.load("Graphics/maxresdefault.jpg").convert()
             background = pygame.transform.scale(background, (width, height))
-
-
-
 
     for a in range(len(ogresList)):
         screen.blit(ogresList[a].image, ogresPos[a])
@@ -156,9 +159,10 @@ while running:
             background = pygame.image.load("Graphics/BattleView.png").convert()
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
-            city.image=pygame.image.load("Graphics/blank.png").convert_alpha()
+            city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             flag = True
-            battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful, click)
+            battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful,
+                                   click)
     if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
@@ -166,7 +170,7 @@ while running:
         flag = True
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
-        city.image=pygame.image.load("Graphics/cityImage.png").convert_alpha()
+        city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
         background = pygame.image.load("Graphics/maxresdefault.jpg")
         background = pygame.transform.scale(background, (width, height))
         flag = False
@@ -186,32 +190,19 @@ while running:
     # background = pygame.image.load("Graphics/lvlup.png")
     # background = pygame.transform.scale(background, (width, height))
 
-    if flag == True:
-        for ogref in ogresList:
-            if flag == False:
-                isMoving = bool(random.getrandbits(1))
-                if isMoving == True:
-                    posy = random.randint(-1, 1)
-                    posx = random.randint(-1, 1)
-                    if posy == -1:
-                        ogref.pos.y -= 100 * dt
-                    elif posy == 1:
-                        ogref.pos.y += 100 * dt
-                    if posx == -1:
-                        ogref.pos.x += -100 * dt
-                    elif posx == 1:
-                        ogref.pos.x += 100 * dt
+
+
 
     keys = pygame.key.get_pressed()
     if flag == False:
         if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt
+            player_pos.y -= 300 *dt
         if keys[pygame.K_s]:
-            player_pos.y += 300 * dt
+            player_pos.y += 300*dt
         if keys[pygame.K_a]:
-            player_pos.x -= 300 * dt
+            player_pos.x -= 300*dt
         if keys[pygame.K_d]:
-            player_pos.x += 300 * dt
+            player_pos.x += 300*dt
         if keys[pygame.K_ESCAPE]:
             flag = True
             menu = True
@@ -222,9 +213,9 @@ while running:
 
         screen.blit(pauseBackground, (0, 0))
         pause = pygame.image.load("Graphics/pause.png").convert()
-        rect=pause.get_rect()
-        rect.center=(width/2,height/2)
-        screen.blit(pause,rect)
+        rect = pause.get_rect()
+        rect.center = (width / 2, height / 2)
+        screen.blit(pause, rect)
         if resume:
             flag = False
             menu = False
