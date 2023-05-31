@@ -219,10 +219,12 @@ while running:
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
         pauseBackground.fill((0, 0, 0))
-        pauseBackground=pygame.transform.scale(pauseBackground, (width, height))
+
         screen.blit(pauseBackground, (0, 0))
         pause = pygame.image.load("Graphics/pause.png").convert()
-        screen.blit(pause, (width * 0.33, height * 0.32))
+        rect=pause.get_rect()
+        rect.center=(width/2,height/2)
+        screen.blit(pause,rect)
         if resume:
             flag = False
             menu = False
