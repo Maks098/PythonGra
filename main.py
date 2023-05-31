@@ -34,7 +34,7 @@ ogrepos = pygame.Vector2(width * 0.3, height * 0.7)
 ogrepos1 = pygame.Vector2(width * 0.6, height * 0.5)
 ogrepos2 = pygame.Vector2(width * 0.4, height * 0.6)
 
-flag = False
+occupied = False
 # background setup
 background = pygame.image.load("Graphics/maxresdefault.jpg")
 background = pygame.transform.scale(background, (width, height))
@@ -44,24 +44,22 @@ updated = 0
 i = 0
 ogreHp = 15
 isFighting = False
-player = Player(player_pos, flag)
-ogre = Ogre(ogrepos, dt, flag, ogreHp)
-ogre1 = Ogre(ogrepos1, dt, flag, ogreHp)
-ogre2 = Ogre(ogrepos2, dt, flag, ogreHp)
+player = Player(player_pos, occupied)
+ogre = Ogre(ogrepos, dt, occupied, ogreHp)
+ogre1 = Ogre(ogrepos1, dt, occupied, ogreHp)
+ogre2 = Ogre(ogrepos2, dt, occupied, ogreHp)
 ogresList = [ogre, ogre1, ogre2]
 city = City(screen)
 pygame.display.flip()
 menu = False
 inCity = False
-# runSuccesful = False
-# battleView = BattleView(flag, runSuccesful)
+
 # starting loop
 while running:
+    runSuccesful = False
+    battleView = BattleView(occupied, runSuccesful)
     click = False
     mousePos = pygame.mouse.get_pos()
-    runSuccesful = False
-    battleView = BattleView(flag, runSuccesful)
-
     attackOrHeal = False
     defendOrUpgrade = False
     runAttemptOrLeave = False
@@ -96,6 +94,10 @@ while running:
                 enteringCity = True
             else:
                 click = True
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                occupied = not occupied
+                menu = not menu
 
     ogresPos = [None] * len(ogresList)
 
@@ -103,7 +105,7 @@ while running:
         ogresPos[q] = ogresList[q].pos
 
     for ogref in ogresList:
-        if flag == False:
+        if occupied == False:
             isMoving = bool(random.getrandbits(1))
             if isMoving == True:
                 whichDirection = bool(random.getrandbits(1))
@@ -133,7 +135,7 @@ while running:
         background = pygame.image.load("Graphics/city.png").convert_alpha()
         city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
         background = pygame.transform.scale(background, (width, height))
-        flag = True
+        occupied = True
         hideAllCreatures(ogresList)
         screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
         screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
@@ -143,7 +145,7 @@ while running:
         elif defendOrUpgrade:
             print("Do zaimplementowania")
         elif runAttemptOrLeave:
-            flag = False
+            occupied = False
             showAllCreatures(ogresList)
             inCity = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
@@ -161,25 +163,25 @@ while running:
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-            flag = True
+            occupied = True
             battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful,
                                    click)
     if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
         background = pygame.transform.scale(background, (width, height))
-        flag = True
+        occupied = True
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
         city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
         background = pygame.image.load("Graphics/maxresdefault.jpg")
         background = pygame.transform.scale(background, (width, height))
-        flag = False
+        occupied = False
 
     for check in ogresList:
         if check.hp <= 0:
             player.exp = player.exp + 3
-            flag = False
+            occupied = False
             ogresList.sort(key=lambda x: x.hp)
             ogresPos.remove(check.pos)
             ogresList.remove(check)
@@ -191,22 +193,23 @@ while running:
     # background = pygame.image.load("Graphics/lvlup.png")
     # background = pygame.transform.scale(background, (width, height))
 
-
-
-
     keys = pygame.key.get_pressed()
-    if flag == False:
+    if occupied == False:
         if keys[pygame.K_w]:
-            player_pos.y -= 300 *dt
+            player_pos.y -= 300 * dt
         if keys[pygame.K_s]:
-            player_pos.y += 300*dt
+            player_pos.y += 300 * dt
         if keys[pygame.K_a]:
-            player_pos.x -= 300*dt
+            player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
-            player_pos.x += 300*dt
-        if keys[pygame.K_ESCAPE]:
-            flag = True
-            menu = True
+            player_pos.x += 300 * dt
+    # for event in pygame.event.get():
+    # if event.type==pygame.KEYDOWN:
+    #  if event.key==pygame.K_ESCAPE:
+
+    # if keys[pygame.K_ESCAPE]:
+    #     occupied = not occupied
+    #     menu = not menu
     if menu:
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
@@ -218,7 +221,7 @@ while running:
         rect.center = (width / 2, height / 2)
         screen.blit(pause, rect)
         if resume:
-            flag = False
+            occupied = False
             menu = False
         elif exitButton:
             exit(0)
