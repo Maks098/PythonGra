@@ -36,7 +36,7 @@ ogrepos2 = pygame.Vector2(width * 0.4, height * 0.6)
 
 occupied = False
 # background setup
-background = pygame.image.load("Graphics/maxresdefault.jpg")
+background = pygame.image.load("Graphics/map.jpg")
 background = pygame.transform.scale(background, (width, height))
 pygame.display.flip()
 updated = 0
@@ -99,6 +99,9 @@ while running:
                 occupied = not occupied
                 menu = not menu
 
+
+    #pygame.draw.rect(screen, "red", (width * 0.1, height * 0.1, width * 0.15, height * 0.04))
+    #pygame.draw.rect(screen, "green", (width * 0.1, height * 0.1, width * 0.15 * playerRatio, height * 0.04))
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -122,7 +125,7 @@ while running:
                         ogref.pos.x += -100 * dt
                     elif posx == 1:
                         ogref.pos.x += 100 * dt
-    print(clock.tick())
+
     screen.blit(city.image, (width * 0.5, height * 0.4))
     screen.blit(player.image, player_pos)
     if not inCity:
@@ -149,7 +152,7 @@ while running:
             showAllCreatures(ogresList)
             inCity = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-            background = pygame.image.load("Graphics/maxresdefault.jpg").convert()
+            background = pygame.image.load("Graphics/map.jpg").convert()
             background = pygame.transform.scale(background, (width, height))
 
     for a in range(len(ogresList)):
@@ -174,7 +177,7 @@ while running:
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
         city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-        background = pygame.image.load("Graphics/maxresdefault.jpg")
+        background = pygame.image.load("Graphics/map.jpg")
         background = pygame.transform.scale(background, (width, height))
         occupied = False
 
@@ -187,7 +190,7 @@ while running:
             ogresList.remove(check)
             showAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-            background = pygame.image.load("Graphics/maxresdefault.jpg")
+            background = pygame.image.load("Graphics/map.jpg")
             background = pygame.transform.scale(background, (width, height))
     # if player.exp==3:
     # background = pygame.image.load("Graphics/lvlup.png")
@@ -203,6 +206,16 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
+    if player_pos.x>width:
+        player_pos.x=-20
+    if player_pos.x<-20:
+        player_pos.x=width
+
+    if player_pos.y>height:
+        player_pos.y=-20
+    if player_pos.y<-20:
+        player_pos.y=height
+
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
@@ -219,6 +232,15 @@ while running:
             menu = False
         elif exitButton:
             exit(0)
+    playerRatio = player.hp / player.maxhp
+    maxHpRect = pygame.Surface((width * 0.15, height * 0.04))
+    maxHpRect.set_alpha(200)
+    maxHpRect.fill((255, 0, 0))
+    screen.blit(maxHpRect, (width * 0.1, height * 0.1))
+    currentHpRect = pygame.Surface((width * 0.15 * playerRatio, height * 0.04))
+    currentHpRect.set_alpha(200)
+    currentHpRect.fill((0, 255, 0))
+    screen.blit(currentHpRect, (width * 0.1, height * 0.1))
 
     pygame.display.flip()
 

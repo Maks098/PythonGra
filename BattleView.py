@@ -12,7 +12,7 @@ class BattleView:
     def startBattle(self, screen, player, enemy, attack, defend, runAttempt, runSuccesful, click):
 
 
-        print(self.i)
+
         playerRatio = player.hp / player.maxhp
         enemyRatio = enemy.hp / enemy.maxhp
         width = screen.get_width()
