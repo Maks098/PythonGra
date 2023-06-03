@@ -1,10 +1,12 @@
 import pygame
+
+from Menu import Menu
 from Ogre import Ogre
 from Player import Player
 from BattleView import BattleView
 import random
 from City import City
-
+from Movement import Movement
 
 def hideAllCreatures(list):
     for j in ogresList:
@@ -53,7 +55,8 @@ city = City(screen)
 pygame.display.flip()
 menu = False
 inCity = False
-
+movement=Movement()
+menuClass=Menu()
 # starting loop
 while running:
     runSuccesful = False
@@ -97,12 +100,7 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 occupied = not occupied
-                menu = not menu
-    print(mousePos)
-    #770,270/1070,370
 
-    # pygame.draw.rect(screen, "red", (width * 0.1, height * 0.1, width * 0.15, height * 0.04))
-    # pygame.draw.rect(screen, "green", (width * 0.1, height * 0.1, width * 0.15 * playerRatio, height * 0.04))
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -145,7 +143,6 @@ while running:
     cityOnMapRect=city.image.get_rect()
     cityOnMapRect.center = (width * 0.48, height *0.18)
     screen.blit(city.image,cityOnMapRect)
-    #screen.blit(city.image, (width * 0.47, height * 0.16))
     screen.blit(player.image, player_pos)
     if not inCity:
         if (player.player_pos.x >= width * 0.45) & (player.player_pos.y >= height * 0.16) & (
@@ -160,7 +157,6 @@ while running:
         hideAllCreatures(ogresList)
         city.enterCity(screen,attackOrHeal,defendOrUpgrade,runAttemptOrLeave,player,background)
         occupied=True
-
         background = pygame.image.load("Graphics/city.png").convert()
         background = pygame.transform.scale(background, (width, height))
         if runAttemptOrLeave:
@@ -213,26 +209,7 @@ while running:
     # background = pygame.image.load("Graphics/lvlup.png")
     # background = pygame.transform.scale(background, (width, height))
 
-    keys = pygame.key.get_pressed()
-    if occupied == False:
-        if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt
-        if keys[pygame.K_s]:
-            player_pos.y += 300 * dt
-        if keys[pygame.K_a]:
-            player_pos.x -= 300 * dt
-        if keys[pygame.K_d]:
-            player_pos.x += 300 * dt
-
-    if player_pos.x > width:
-        player_pos.x = -20
-    if player_pos.x < -20:
-        player_pos.x = width
-
-    if player_pos.y > height*0.72:
-        player_pos.y = -20
-    if player_pos.y < -20:
-        player_pos.y = height*0.72
+    movement.startMovement(occupied,player_pos,dt,width,height)
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
@@ -249,7 +226,8 @@ while running:
             menu = False
         elif exitButton:
             exit(0)
-
+        #menuClass.menu(screen,resume,exitButton,occupied,menu)
+    print(menu)
 
     pygame.display.flip()
 
