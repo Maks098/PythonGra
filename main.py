@@ -36,7 +36,7 @@ ogrepos2 = pygame.Vector2(width * 0.4, height * 0.6)
 
 occupied = False
 # background setup
-background = pygame.image.load("Graphics/map.jpg")
+background = pygame.image.load("Graphics/PytongProjekt.jpg")
 background = pygame.transform.scale(background, (width, height))
 pygame.display.flip()
 updated = 0
@@ -89,8 +89,8 @@ while running:
             elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
                     mousePos[1] <= height * 0.62):
                 exitButton = True
-            elif (mousePos[0] >= width * 0.44) & (mousePos[1] >= height * 0.3) & (mousePos[0] <= width * 0.59) & (
-                    mousePos[1] <= height * 0.38):
+            elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.25) & (mousePos[0] <= width * 0.56) & (
+                    mousePos[1] <= height * 0.34):
                 enteringCity = True
             else:
                 click = True
@@ -98,10 +98,11 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 occupied = not occupied
                 menu = not menu
+    print(mousePos)
+    #770,270/1070,370
 
-
-    #pygame.draw.rect(screen, "red", (width * 0.1, height * 0.1, width * 0.15, height * 0.04))
-    #pygame.draw.rect(screen, "green", (width * 0.1, height * 0.1, width * 0.15 * playerRatio, height * 0.04))
+    # pygame.draw.rect(screen, "red", (width * 0.1, height * 0.1, width * 0.15, height * 0.04))
+    # pygame.draw.rect(screen, "green", (width * 0.1, height * 0.1, width * 0.15 * playerRatio, height * 0.04))
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -125,35 +126,50 @@ while running:
                         ogref.pos.x += -100 * dt
                     elif posx == 1:
                         ogref.pos.x += 100 * dt
+    if not inCity:
+        font = pygame.font.Font("Fonts/zx_spectrum-7_bold.ttf", 30)
+        playerCurrentHpImg = font.render("Zycie: "+str(player.hp)+"/"+str(player.maxhp), True, "black")
+        screen.blit(playerCurrentHpImg, (width * 0.03, height * 0.8))
+        playerStrength = font.render("Sila: "+str(player.strength), True, "black")
+        screen.blit(playerStrength, (width * 0.03, height * 0.9))
+        playerCurrentHpImg = font.render("Zwinnosc: "+str(player.agility), True, "black")
+        screen.blit(playerCurrentHpImg, (width * 0.2, height * 0.8))
+        playerCurrentHpImg = font.render("Pancerz: "+str(player.armor), True, "black")
+        screen.blit(playerCurrentHpImg, (width * 0.2, height * 0.9))
+        playerCurrentHpImg = font.render("Punkty doswiadczenia: " + str(player.exp), True, "black")
+        screen.blit(playerCurrentHpImg, (width * 0.4, height * 0.9))
+        playerCurrentHpImg = font.render("Zloto: " + str(player.gold), True, "black")
+        screen.blit(playerCurrentHpImg, (width * 0.4, height * 0.8))
 
-    screen.blit(city.image, (width * 0.5, height * 0.4))
+
+    cityOnMapRect=city.image.get_rect()
+    cityOnMapRect.center = (width * 0.48, height *0.18)
+    screen.blit(city.image,cityOnMapRect)
+    #screen.blit(city.image, (width * 0.47, height * 0.16))
     screen.blit(player.image, player_pos)
     if not inCity:
-        if (player.player_pos.x >= width * 0.49) & (player.player_pos.y >= height * 0.39) & (
-                player.player_pos.x <= width * 0.52) & (player.player_pos.y <= height * 0.46):
-            screen.blit(pygame.image.load("Graphics/enter.png").convert(), (width * 0.44, height * 0.3))
+        if (player.player_pos.x >= width * 0.45) & (player.player_pos.y >= height * 0.16) & (
+                player.player_pos.x <= width * 0.49) & (player.player_pos.y <= height * 0.21):
+            enter = pygame.image.load("Graphics/enter.png").convert()
+            enterRect = enter.get_rect()
+            enterRect.center = (width * 0.48, height *0.3)
+            screen.blit(enter,enterRect)
             if enteringCity:
                 inCity = True
     if inCity:
-        background = pygame.image.load("Graphics/city.png").convert_alpha()
-        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        background = pygame.transform.scale(background, (width, height))
-        occupied = True
         hideAllCreatures(ogresList)
-        screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
-        screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
-        screen.blit(pygame.image.load("Graphics/leave.png").convert(), (width * 0.75, height * 0.8))
-        if attackOrHeal:
-            player.hp = player.maxhp
-        elif defendOrUpgrade:
-            print("Do zaimplementowania")
-        elif runAttemptOrLeave:
-            occupied = False
+        city.enterCity(screen,attackOrHeal,defendOrUpgrade,runAttemptOrLeave,player,background)
+        occupied=True
+
+        background = pygame.image.load("Graphics/city.png").convert()
+        background = pygame.transform.scale(background, (width, height))
+        if runAttemptOrLeave:
             showAllCreatures(ogresList)
-            inCity = False
+            occupied = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-            background = pygame.image.load("Graphics/map.jpg").convert()
+            background = pygame.image.load("Graphics/PytongProjekt.jpg").convert()
             background = pygame.transform.scale(background, (width, height))
+            inCity = False
 
     for a in range(len(ogresList)):
         screen.blit(ogresList[a].image, ogresPos[a])
@@ -177,7 +193,7 @@ while running:
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
         city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-        background = pygame.image.load("Graphics/map.jpg")
+        background = pygame.image.load("Graphics/PytongProjekt.jpg")
         background = pygame.transform.scale(background, (width, height))
         occupied = False
 
@@ -190,8 +206,9 @@ while running:
             ogresList.remove(check)
             showAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
-            background = pygame.image.load("Graphics/map.jpg")
+            background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
+            player.gold=player.gold+random.randint(1,6)
     # if player.exp==3:
     # background = pygame.image.load("Graphics/lvlup.png")
     # background = pygame.transform.scale(background, (width, height))
@@ -206,16 +223,16 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
-    if player_pos.x>width:
-        player_pos.x=-20
-    if player_pos.x<-20:
-        player_pos.x=width
 
-    if player_pos.y>height:
-        player_pos.y=-20
-    if player_pos.y<-20:
-        player_pos.y=height
+    if player_pos.x > width:
+        player_pos.x = -20
+    if player_pos.x < -20:
+        player_pos.x = width
 
+    if player_pos.y > height*0.72:
+        player_pos.y = -20
+    if player_pos.y < -20:
+        player_pos.y = height*0.72
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
@@ -224,23 +241,15 @@ while running:
 
         screen.blit(pauseBackground, (0, 0))
         pause = pygame.image.load("Graphics/pause.png").convert()
-        rect = pause.get_rect()
-        rect.center = (width / 2, height / 2)
-        screen.blit(pause, rect)
+        pauseRect = pause.get_rect()
+        pauseRect.center = (width / 2, height / 2)
+        screen.blit(pause, pauseRect)
         if resume:
             occupied = False
             menu = False
         elif exitButton:
             exit(0)
-    playerRatio = player.hp / player.maxhp
-    maxHpRect = pygame.Surface((width * 0.15, height * 0.04))
-    maxHpRect.set_alpha(200)
-    maxHpRect.fill((255, 0, 0))
-    screen.blit(maxHpRect, (width * 0.1, height * 0.1))
-    currentHpRect = pygame.Surface((width * 0.15 * playerRatio, height * 0.04))
-    currentHpRect.set_alpha(200)
-    currentHpRect.fill((0, 255, 0))
-    screen.blit(currentHpRect, (width * 0.1, height * 0.1))
+
 
     pygame.display.flip()
 
