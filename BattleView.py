@@ -4,18 +4,18 @@ import pygame
 
 
 class BattleView:
-    def __init__(self, flag, runSuccesful):
+    def __init__(self, flag, runSuccesful,):
         self.flag = flag
         self.runSuccesful = runSuccesful
         self.i=0
-        self.playerLog=False
 
-    def startBattle(self, screen, player, enemy, attack, defend, runAttempt, runSuccesful, click):
+    def startBattle(self, screen, player, enemy, attack, defend, runAttempt, runSuccesful):
 
         playerRatio = player.hp / player.maxhp
         enemyRatio = enemy.hp / enemy.maxhp
         width = screen.get_width()
         height = screen.get_height()
+
 
         screen.blit(pygame.image.load("Graphics/attack.png").convert(), (width * 0.1, height * 0.8))
         screen.blit(pygame.image.load("Graphics/defend.png").convert(), (width * 0.4, height * 0.8))
@@ -36,10 +36,11 @@ class BattleView:
             enemyChanceToDodge = random.randint(0, enemy.agility)
             if playerChanceToStrike > enemyChanceToDodge:
                 enemy.getDamage(player.strength)
-                #playerCommunication = font.render('Gracz zadał ' + str(player.strength - enemy.armor) + " obrażeń", True, "black")
-               # screen.blit(playerCommunication, (width / 2, height * 0.1))
+                playerCommunication = font.render('Gracz zadał ' + str(player.strength - enemy.armor) + " obrażeń", True, "black")
+                screen.blit(playerCommunication, (width / 2, height * 0.1))
+
             else:
-                playerCommunication = font.render('Gracz chybił', True, "black")
+                playerCommunication = font.render('Gracz chybil', True, "black")
                 screen.blit(playerCommunication, (width / 2, height * 0.1))
 
             playerChanceToDodge = random.randint(0, player.agility)
@@ -55,5 +56,3 @@ class BattleView:
         if runAttempt:
             player.player_pos.y = player.player_pos.y + 50
             self.runSuccesful = True
-        #if enemy.hp!=enemyStartingHp:
-

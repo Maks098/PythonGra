@@ -1,5 +1,6 @@
 import pygame
 
+from Interface import Interface
 from Menu import Menu
 from Ogre import Ogre
 from Player import Player
@@ -18,7 +19,10 @@ def showAllCreatures(list):
     for j in list:
         j.image = pygame.image.load("Graphics/Ogre.png").convert_alpha()
     player.image = pygame.image.load("Graphics/PlayerTest.png").convert_alpha()
-
+def turnOnForSomeDt(forHowLong):
+    start=pygame.time.get_ticks()
+    if start+forHowLong>pygame.time.get_ticks():
+        pygame.draw.rect(screen,"black",(300,300,30,30))
 
 # pygame setup
 pygame.init()
@@ -55,10 +59,12 @@ city = City(screen)
 pygame.display.flip()
 menu = False
 inCity = False
+inLevelUp=False
 movement=Movement()
 menuClass=Menu()
 # starting loop
 while running:
+    interface=Interface()
     runSuccesful = False
     battleView = BattleView(occupied, runSuccesful)
     click = False
@@ -100,6 +106,10 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 occupied = not occupied
+                menu=not menu
+    #\/Przykład działania czegoś tylko przez określony czas! Można użyć to wyświetlania komunikatu o zadanych obrażeniach
+    #if pygame.time.get_ticks()<2000:
+       # pygame.draw.rect(screen,"black",(300,300,20,20))
 
     ogresPos = [None] * len(ogresList)
 
@@ -124,20 +134,15 @@ while running:
                         ogref.pos.x += -100 * dt
                     elif posx == 1:
                         ogref.pos.x += 100 * dt
-    if not inCity:
-        font = pygame.font.Font("Fonts/zx_spectrum-7_bold.ttf", 30)
-        playerCurrentHpImg = font.render("Zycie: "+str(player.hp)+"/"+str(player.maxhp), True, "black")
-        screen.blit(playerCurrentHpImg, (width * 0.03, height * 0.8))
-        playerStrength = font.render("Sila: "+str(player.strength), True, "black")
-        screen.blit(playerStrength, (width * 0.03, height * 0.9))
-        playerCurrentHpImg = font.render("Zwinnosc: "+str(player.agility), True, "black")
-        screen.blit(playerCurrentHpImg, (width * 0.2, height * 0.8))
-        playerCurrentHpImg = font.render("Pancerz: "+str(player.armor), True, "black")
-        screen.blit(playerCurrentHpImg, (width * 0.2, height * 0.9))
-        playerCurrentHpImg = font.render("Punkty doswiadczenia: " + str(player.exp), True, "black")
-        screen.blit(playerCurrentHpImg, (width * 0.4, height * 0.9))
-        playerCurrentHpImg = font.render("Zloto: " + str(player.gold), True, "black")
-        screen.blit(playerCurrentHpImg, (width * 0.4, height * 0.8))
+    #if player.exp==3:
+        # inLevelUp=True
+        # background = pygame.image.load("Graphics/lvlup.png")
+        # background = pygame.transform.scale(background, (width, height))
+        # occupied=True
+        # hideAllCreatures(ogresList)
+        # city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+    if ((not inCity) or (not inLevelUp==False)):
+        interface.showInterface(screen,player)
 
 
     cityOnMapRect=city.image.get_rect()
@@ -179,8 +184,7 @@ while running:
             hideAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
-            battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful,
-                                   click)
+            battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
     if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
@@ -205,9 +209,7 @@ while running:
             background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
             player.gold=player.gold+random.randint(1,6)
-    # if player.exp==3:
-    # background = pygame.image.load("Graphics/lvlup.png")
-    # background = pygame.transform.scale(background, (width, height))
+
 
     movement.startMovement(occupied,player_pos,dt,width,height)
 
@@ -215,7 +217,6 @@ while running:
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
         pauseBackground.fill((0, 0, 0))
-
         screen.blit(pauseBackground, (0, 0))
         pause = pygame.image.load("Graphics/pause.png").convert()
         pauseRect = pause.get_rect()
@@ -226,11 +227,10 @@ while running:
             menu = False
         elif exitButton:
             exit(0)
-        #menuClass.menu(screen,resume,exitButton,occupied,menu)
-    print(menu)
 
     pygame.display.flip()
 
     dt = clock.tick(60) / 1000
     i = i + 1
+
 pygame.quit()
