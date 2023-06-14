@@ -75,6 +75,9 @@ while running:
     resume = False
     exitButton = False
     enteringCity = False
+    enter = pygame.image.load("Graphics/enter.png").convert()
+    enterRect = enter.get_rect()
+    enterRect.center = (width * 0.48, height * 0.3)
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -98,9 +101,8 @@ while running:
             elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
                     mousePos[1] <= height * 0.62):
                 exitButton = True
-            elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.25) & (mousePos[0] <= width * 0.56) & (
-                    mousePos[1] <= height * 0.34):
-                enteringCity = True
+            elif enterRect.collidepoint(event.pos):
+                enteringCity=True
             else:
                 click = True
         elif event.type == pygame.KEYDOWN:
@@ -149,12 +151,11 @@ while running:
     cityOnMapRect.center = (width * 0.48, height *0.18)
     screen.blit(city.image,cityOnMapRect)
     screen.blit(player.image, player_pos)
+
     if not inCity:
         if (player.player_pos.x >= width * 0.45) & (player.player_pos.y >= height * 0.16) & (
                 player.player_pos.x <= width * 0.49) & (player.player_pos.y <= height * 0.21):
-            enter = pygame.image.load("Graphics/enter.png").convert()
-            enterRect = enter.get_rect()
-            enterRect.center = (width * 0.48, height *0.3)
+
             screen.blit(enter,enterRect)
             if enteringCity:
                 inCity = True
