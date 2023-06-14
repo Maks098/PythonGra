@@ -31,7 +31,7 @@ class City():
                 print("do zaimplementoowania")
             elif player.hp < player.maxhp:
                 player.hp += 1
-                player.gold -= 2
+                player.gold -= 1
 
         elif upgrade:
             if player.gold <= 0:
@@ -39,4 +39,4 @@ class City():
                 print("do zaimplementoowania")
             else:
                 player.armor += 1
-                player.gold -= 2
+                player.gold -= 1
