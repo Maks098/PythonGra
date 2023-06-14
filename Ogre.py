@@ -19,14 +19,10 @@ class Ogre():
         if flag==True:
             self.image=pygame.image.load("Graphics/blank.png").convert_alpha()
 
-
-
-
-
-
     def getDamage(self,damage):
         self.hp=self.hp-(damage-self.armor)
 
     def updateSOF(self):
         self.influenceSpherex = pygame.Vector2(self.pos.x - 20, self.pos.x + 20)
         self.influenceSpherey = pygame.Vector2(self.pos.y - 20, self.pos.y + 30)
+

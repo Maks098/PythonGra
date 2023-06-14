@@ -23,3 +23,14 @@ class Movement():
             player_pos.y = -20
         if player_pos.y < -20:
             player_pos.y = height * 0.72
+
+    def ogre_movement(self, o_pos, width, height):
+        if o_pos.x > width:
+            o_pos.x = -20
+        if o_pos.x < -20:
+            o_pos.x = width
+
+        if o_pos.y > height * 0.72:
+            o_pos.y = -20
+        if o_pos.y < -20:
+            o_pos.y = height * 0.72

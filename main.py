@@ -127,15 +127,18 @@ while running:
                     # vertical
                     posy = random.randint(-1, 1)
                     if posy == -1:
-                        ogref.pos.y -= 100 * dt
+                        ogref.pos.y -= 1000 * dt
                     elif posy == 1:
-                        ogref.pos.y += 100 * dt
+                        ogref.pos.y += 1000 * dt
                 else:
                     posx = random.randint(-1, 1)
                     if posx == -1:
-                        ogref.pos.x += -100 * dt
+                        ogref.pos.x += -1000 * dt
                     elif posx == 1:
-                        ogref.pos.x += 100 * dt
+                        ogref.pos.x += 1000 * dt
+
+                movement.ogre_movement(ogref.pos, width, height)
+
     #if player.exp==3:
         # inLevelUp=True
         # background = pygame.image.load("Graphics/lvlup.png")
@@ -212,7 +215,7 @@ while running:
             player.gold=player.gold+random.randint(1,6)
 
 
-    movement.startMovement(occupied,player_pos,dt,width,height)
+    movement.startMovement(occupied, player_pos, dt, width, height)
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
