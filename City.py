@@ -7,9 +7,40 @@ class City():
     def __init__(self, screen):
         self.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
 
-    def enterCity(self, screen, heal, upgrade, leave, player, background):
+    def enterCity(self, screen, leave, player, background):
+        heal=False
+        upgrade=False
+        leaveFromCityPerspective=False
+        print(leave)
         width = screen.get_width()
         height = screen.get_height()
+
+        healImg = pygame.image.load("Graphics/heal.png").convert()
+        healRect = healImg.get_rect()
+        healRect.center = (width * 0.2, height * 0.85)
+
+        upgradeImg = pygame.image.load("Graphics/upgrade.png").convert()
+        upgradeRect = upgradeImg.get_rect()
+        upgradeRect.center = (width * 0.5, height * 0.85)
+
+        leaveImg = pygame.image.load("Graphics/leave.png").convert()
+        leaveRect = leaveImg.get_rect()
+        leaveRect.center = (width * 0.85, height * 0.85)
+
+        screen.blit(healImg,healRect)
+        screen.blit(upgradeImg,upgradeRect)
+        screen.blit(leaveImg,leaveRect)
+
+        for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if healRect.collidepoint(event.pos):
+                    heal=True
+                if upgradeRect.collidepoint(event.pos):
+                    upgrade=True
+                if leaveRect.collidepoint(event.pos):
+                    leaveFromCityPerspective=True
+
+
         screen.blit(pygame.image.load("Graphics/PlayerInFight.png").convert_alpha(), (width * 0.45, height * 0.55))
         font = pygame.font.Font("Fonts/zx_spectrum-7_bold.ttf", 30)
         player_current_hp = font.render("Zycie: " + str(player.hp) + "/" + str(player.maxhp), True, "black")
@@ -22,9 +53,6 @@ class City():
         self.image = pygame.image.load("Graphics/blank.png").convert_alpha()
         background = pygame.transform.scale(background, (width, height))
         occupied = True
-        screen.blit(pygame.image.load("Graphics/heal.png").convert(), (width * 0.1, height * 0.8))
-        screen.blit(pygame.image.load("Graphics/upgrade.png").convert(), (width * 0.4, height * 0.8))
-        screen.blit(pygame.image.load("Graphics/leave.png").convert(), (width * 0.75, height * 0.8))
         if heal:
             if player.gold <= 0:
                 player.gold = 0
@@ -40,3 +68,5 @@ class City():
             else:
                 player.armor += 1
                 player.gold -= 1
+        elif leaveFromCityPerspective:
+            return True

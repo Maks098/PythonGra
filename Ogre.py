@@ -25,4 +25,3 @@ class Ogre():
     def updateSOF(self):
         self.influenceSpherex = pygame.Vector2(self.pos.x - 20, self.pos.x + 20)
         self.influenceSpherey = pygame.Vector2(self.pos.y - 20, self.pos.y + 30)
-
