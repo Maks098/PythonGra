@@ -62,22 +62,60 @@ inCity = False
 inLevelUp=False
 movement=Movement()
 menuClass=Menu()
+startTic=0
 # starting loop
 while running:
     interface=Interface()
     runSuccesful = False
-    battleView = BattleView(occupied, runSuccesful)
+    battleView = BattleView(occupied, runSuccesful,startTic)
     click = False
     mousePos = pygame.mouse.get_pos()
     attackOrHeal = False
     defendOrUpgrade = False
-    runAttemptOrLeave = False
+    leave = False
     resume = False
     exitButton = False
     enteringCity = False
     enter = pygame.image.load("Graphics/enter.png").convert()
     enterRect = enter.get_rect()
     enterRect.center = (width * 0.48, height * 0.3)
+
+    resumeImg = pygame.image.load("Graphics/resume.png").convert()
+    resumeRect = resumeImg.get_rect()
+    resumeRect.center = (width * 0.5, height * 0.48)
+
+    exitImg = pygame.image.load("Graphics/exit.png").convert()
+    exitRect = exitImg.get_rect()
+    exitRect.center = (width * 0.5, height * 0.6)
+
+    attack = pygame.image.load("Graphics/attack.png").convert()
+    attackRect=attack.get_rect()
+    attackRect.center=(width * 0.1, height * 0.8)
+
+    defend = pygame.image.load("Graphics/defend.png").convert()
+    defendRect=defend.get_rect()
+    defendRect.center=(width * 0.4, height * 0.8)
+
+
+    runAttempt = pygame.image.load("Graphics/runAttempt.png").convert()
+    runAttemptRect=runAttempt.get_rect()
+    runAttemptRect.center=(width * 0.75, height * 0.8)
+
+    heal = pygame.image.load("Graphics/heal.png").convert()
+    healRec=heal.get_rect()
+    healRec.center = (width * 0.1, height * 0.8)
+
+    upgrade = pygame.image.load("Graphics/upgrade.png").convert()
+    upgradeRect=upgrade.get_rect()
+    upgradeRect.center = (width * 0.4, height * 0.8)
+
+    leaveImg = pygame.image.load("Graphics/leave.png").convert()
+    leaveRect=leaveImg.get_rect()
+    leaveRect.center = (width * 0.75, height * 0.8)
+
+    battleButtonsImgs=[attack,defend,runAttempt]
+    battleButtonsRects = [attackRect, defendRect, runAttemptRect]
+
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -86,20 +124,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if (mousePos[0] >= width * 0.1) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.25) & (
-                    mousePos[1] <= height * 0.9):
-                attackOrHeal = True
-            elif (mousePos[0] >= width * 0.4) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.55) & (
-                    mousePos[1] <= height * 0.9):
-                defendOrUpgrade = True
-            elif (mousePos[0] >= width * 0.75) & (mousePos[1] >= height * 0.8) & (mousePos[0] <= width * 0.90) & (
-                    mousePos[1] <= height * 0.9):
-                runAttemptOrLeave = True
-            elif (mousePos[0] >= width * 0.44) & (mousePos[1] >= height * 0.47) & (mousePos[0] <= width * 0.56) & (
-                    mousePos[1] <= height * 0.53):
+            if (resumeRect.collidepoint(event.pos)):
                 resume = True
-            elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
-                    mousePos[1] <= height * 0.62):
+            elif (exitRect.collidepoint(event.pos)):
                 exitButton = True
             elif enterRect.collidepoint(event.pos):
                 enteringCity=True
@@ -127,18 +154,16 @@ while running:
                     # vertical
                     posy = random.randint(-1, 1)
                     if posy == -1:
-                        ogref.pos.y -= 1000 * dt
+                        ogref.pos.y -= 100 * dt
                     elif posy == 1:
-                        ogref.pos.y += 1000 * dt
+                        ogref.pos.y += 100 * dt
                 else:
                     posx = random.randint(-1, 1)
                     if posx == -1:
-                        ogref.pos.x += -1000 * dt
+                        ogref.pos.x += -100 * dt
                     elif posx == 1:
-                        ogref.pos.x += 1000 * dt
-
-                movement.ogre_movement(ogref.pos, width, height)
-
+                        ogref.pos.x += 100 * dt
+    movement.ogre_movement(ogref.pos, width, height)
     #if player.exp==3:
         # inLevelUp=True
         # background = pygame.image.load("Graphics/lvlup.png")
@@ -164,11 +189,11 @@ while running:
                 inCity = True
     if inCity:
         hideAllCreatures(ogresList)
-        city.enterCity(screen,attackOrHeal,defendOrUpgrade,runAttemptOrLeave,player,background)
+        leave=city.enterCity(screen,leave,player,background)
         occupied=True
         background = pygame.image.load("Graphics/city.png").convert()
         background = pygame.transform.scale(background, (width, height))
-        if runAttemptOrLeave:
+        if leave:
             showAllCreatures(ogresList)
             occupied = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
@@ -188,7 +213,7 @@ while running:
             hideAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
-            battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
+            battleView.startBattle(screen, player, ogre, attackOrHeal)
     if player.hp <= 0:
         hideAllCreatures(ogresList)
         background = pygame.image.load("Graphics/śmierć.png").convert()
@@ -215,7 +240,7 @@ while running:
             player.gold=player.gold+random.randint(1,6)
 
 
-    movement.startMovement(occupied, player_pos, dt, width, height)
+    movement.startMovement(occupied,player_pos,dt,width,height)
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
@@ -226,6 +251,8 @@ while running:
         pauseRect = pause.get_rect()
         pauseRect.center = (width / 2, height / 2)
         screen.blit(pause, pauseRect)
+        screen.blit(resumeImg,resumeRect)
+        screen.blit(exitImg,exitRect)
         if resume:
             occupied = False
             menu = False
