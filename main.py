@@ -221,10 +221,22 @@ while running:
         pauseBackground.set_alpha(150)
         pauseBackground.fill((0, 0, 0))
         screen.blit(pauseBackground, (0, 0))
+
         pause = pygame.image.load("Graphics/pause.png").convert()
         pauseRect = pause.get_rect()
         pauseRect.center = (width / 2, height / 2)
+
+        resumeImg = pygame.image.load("Graphics/resume.png").convert()
+        resumeImg_rect = resumeImg.get_rect()
+        resumeImg_rect.center = (width / 2, height / 2)
+
+        exitImg = pygame.image.load("Graphics/exit.png").convert()
+        exitImg_rect = exitImg.get_rect()
+        exitImg_rect.center = (width / 2, height * 0.59)
+
         screen.blit(pause, pauseRect)
+        screen.blit(resumeImg, resumeImg_rect)
+        screen.blit(exitImg, exitImg_rect)
         if resume:
             occupied = False
             menu = False
