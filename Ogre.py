@@ -19,6 +19,7 @@ class Ogre():
         if flag==True:
             self.image=pygame.image.load("Graphics/blank.png").convert_alpha()
 
+
     def getDamage(self,damage):
         self.hp=self.hp-(damage-self.armor)
 
