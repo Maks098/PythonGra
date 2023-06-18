@@ -4,14 +4,14 @@ import pygame
 
 
 class BattleView:
-    def __init__(self, flag, runSuccesful):
+    def __init__(self, flag, runSuccesful,):
         self.flag = flag
         self.runSuccesful = runSuccesful
         self.i=0
 
 
     def print_message(self,screen, font, communicate, comm_center):
-        display_duration = 1
+        display_duration = 0.5
         message = font.render(communicate, True, 'black')
         comm_rect = message.get_rect()
         comm_rect_center = (comm_center)
@@ -31,6 +31,7 @@ class BattleView:
         width = screen.get_width()
         height = screen.get_height()
 
+
         screen.blit(pygame.image.load("Graphics/attack.png").convert(), (width * 0.1, height * 0.8))
         screen.blit(pygame.image.load("Graphics/defend.png").convert(), (width * 0.4, height * 0.8))
         screen.blit(pygame.image.load("Graphics/runAttempt.png").convert(), (width * 0.75, height * 0.8))
@@ -49,6 +50,8 @@ class BattleView:
         screen.blit(playerHpImg, (width * 0.15, height * 0.23))
         screen.blit(enemyHpImg, (width * 0.785, height * 0.23))
 
+
+
         if attack:
             playerChanceToStrike = random.randint(0, player.agility)
             enemyChanceToDodge = random.randint(0, enemy.agility)
@@ -60,14 +63,12 @@ class BattleView:
                 comm_rect_center = (width / 2 * 0.85, height * 0.2)
 
                 self.print_message(screen, font, player_comm, comm_rect_center)
-                self.i=self.i+1
 
             else:
                 player_comm_miss = "Gracz chybil"
                 comm_rect_center_miss = (width / 2 * 0.85, height * 0.2)
 
                 self.print_message(screen, font, player_comm_miss, comm_rect_center_miss)
-                self.i=self.i+1
 
             playerChanceToDodge = random.randint(0, player.agility)
             enemyChanceToStrike = random.randint(0, enemy.agility)
@@ -88,10 +89,7 @@ class BattleView:
                 self.i = self.i + 1
 
         if defend:
-            player.armor = player.armor + 1
-            player.getDamage(enemy.strength)
-            player.armor = player.armor - 1
-
+            player.getDamage(enemy.strength-1)
             comm = "Gracz uzywa obrony"
             comm_rect_center = (width / 2 * 0.85, height * 0.2)
 
