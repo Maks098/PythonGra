@@ -1,5 +1,6 @@
 import pygame
 
+from Blacksmith import Blacksmith
 from Interface import Interface
 from Menu import Menu
 from Ogre import Ogre
@@ -56,9 +57,11 @@ ogre1 = Ogre(ogrepos1, dt, occupied, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, occupied, ogreHp)
 ogresList = [ogre, ogre1, ogre2]
 city = City(screen)
+blacksmith = Blacksmith(screen)
 pygame.display.flip()
 menu = False
 inCity = False
+inBlacksmith = False
 inLevelUp=False
 movement=Movement()
 menuClass=Menu()
@@ -75,6 +78,7 @@ while running:
     resume = False
     exitButton = False
     enteringCity = False
+    enteringBlacksmith = False
 
     screen.blit(background, (0, 0))
     # looking for events
@@ -101,14 +105,16 @@ while running:
             elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.25) & (mousePos[0] <= width * 0.56) & (
                     mousePos[1] <= height * 0.34):
                 enteringCity = True
+            elif (mousePos[0] >= width * 0.72) & (mousePos[1] >= height * 0.3) & (mousePos[0] <= width * 0.88) & (
+                    mousePos[1] <= height * 0.4):
+                enteringBlacksmith = True
             else:
                 click = True
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 occupied = not occupied
                 menu=not menu
-    #\/Przykład działania czegoś tylko przez określony czas! Można użyć to wyświetlania komunikatu o zadanych obrażeniach
-    #if pygame.time.get_ticks()<2000:
+
        # pygame.draw.rect(screen,"black",(300,300,20,20))
 
     ogresPos = [None] * len(ogresList)
@@ -152,6 +158,7 @@ while running:
     cityOnMapRect.center = (width * 0.48, height *0.18)
     screen.blit(city.image,cityOnMapRect)
     screen.blit(player.image, player_pos)
+
     if not inCity:
         if (player.player_pos.x >= width * 0.45) & (player.player_pos.y >= height * 0.16) & (
                 player.player_pos.x <= width * 0.49) & (player.player_pos.y <= height * 0.21):
@@ -163,6 +170,7 @@ while running:
                 inCity = True
     if inCity:
         hideAllCreatures(ogresList)
+        blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
         city.enterCity(screen,attackOrHeal,defendOrUpgrade,runAttemptOrLeave,player,background)
         occupied=True
         background = pygame.image.load("Graphics/city.png").convert()
@@ -170,10 +178,42 @@ while running:
         if runAttemptOrLeave:
             showAllCreatures(ogresList)
             occupied = False
+            blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background = pygame.image.load("Graphics/PytongProjekt.jpg").convert()
             background = pygame.transform.scale(background, (width, height))
             inCity = False
+
+    blacksmithOnMapRect = blacksmith.image.get_rect()
+    blacksmithOnMapRect.center = (width * 0.8, height * 0.25)
+    screen.blit(blacksmith.image, blacksmithOnMapRect)
+    screen.blit(player.image, player_pos)
+
+    if not inBlacksmith:
+        if (player.player_pos.x >= width * 0.77) & (player.player_pos.y >= height * 0.20) & (
+                player.player_pos.x <= width * 0.81) & (player.player_pos.y <= height * 0.28):
+            enter = pygame.image.load("Graphics/enter.png").convert()
+            enterRect = enter.get_rect()
+            enterRect.center = (width * 0.8, height *0.35)
+            screen.blit(enter,enterRect)
+            if enteringBlacksmith:
+                inBlacksmith = True
+    if inBlacksmith:
+        hideAllCreatures(ogresList)
+        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        blacksmith.enter_blacksmith(screen, defendOrUpgrade, runAttemptOrLeave, player, background)
+        occupied = True
+        background = pygame.image.load("Graphics/blacksmith.png").convert()
+        background = pygame.transform.scale(background, (width, height))
+
+        if runAttemptOrLeave:
+            showAllCreatures(ogresList)
+            occupied = False
+            city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
+            blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
+            background = pygame.image.load("Graphics/PytongProjekt.jpg").convert()
+            background = pygame.transform.scale(background, (width, height))
+            inBlacksmith = False
 
     for a in range(len(ogresList)):
         screen.blit(ogresList[a].image, ogresPos[a])
@@ -186,6 +226,7 @@ while running:
             background = pygame.transform.scale(background, (width, height))
             hideAllCreatures(ogresList)
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+            blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
             battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
     if player.hp <= 0:
@@ -195,6 +236,7 @@ while running:
         occupied = True
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
+        blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
         city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
         background = pygame.image.load("Graphics/PytongProjekt.jpg")
         background = pygame.transform.scale(background, (width, height))
