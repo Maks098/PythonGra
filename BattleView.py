@@ -78,13 +78,13 @@ class BattleView:
             if enemyChanceToStrike > playerChanceToDodge:
                 player.getDamage(enemy.strength-player.armor)
 
-                enemy_comm = "Ogr atakuje"
+                enemy_comm = "Przeciwnik atakuje"
                 e_comm_rect_center = (width / 2 * 0.85, height * 0.25)
 
                 self.print_message(screen, font, enemy_comm, e_comm_rect_center)
                 self.i=self.i+1
             else:
-                enemy_comm = "Ogr nie trafia atakiem"
+                enemy_comm = "Przeciwnik nie trafia atakiem"
                 e_comm_rect_center = (width / 2 * 0.85, height * 0.25)
 
                 self.print_message(screen, font, enemy_comm, e_comm_rect_center)
