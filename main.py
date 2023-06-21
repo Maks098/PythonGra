@@ -37,9 +37,12 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 width = screen.get_width()
 height = screen.get_height()
 
-ogrepos = pygame.Vector2(width * 0.3, height * 0.7)
-ogrepos1 = pygame.Vector2(width * 0.6, height * 0.5)
-ogrepos2 = pygame.Vector2(width * 0.4, height * 0.6)
+ogrepos = pygame.Vector2(width * 0.3, height * 0.65)
+ogrepos1 = pygame.Vector2(width * 0.6, height * 0.65)
+ogrepos2 = pygame.Vector2(width * 0.2, height * 0.2)
+ogrepos3 = pygame.Vector2(width * 0.8, height * 0.5)
+ogrepos4 = pygame.Vector2(width * 0.7, height * 0.1)
+ogrepos5 = pygame.Vector2(width * 0.1, height * 0.6)
 
 occupied = False
 # background setup
@@ -55,7 +58,13 @@ player = Player(player_pos, occupied)
 ogre = Ogre(ogrepos, dt, occupied, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, occupied, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, occupied, ogreHp)
-ogresList = [ogre, ogre1, ogre2]
+ogre3 = Ogre(ogrepos3, dt, occupied, ogreHp)
+ogre4 = Ogre(ogrepos4, dt, occupied, ogreHp)
+ogre5 = Ogre(ogrepos5, dt, occupied, ogreHp)
+
+
+ogresList = [ogre, ogre1, ogre2, ogre3, ogre4, ogre5]
+
 city = City(screen)
 blacksmith = Blacksmith(screen)
 pygame.display.flip()
@@ -63,10 +72,12 @@ menu = False
 inCity = False
 inBlacksmith = False
 inLevelUp=False
+isDead = False
 movement=Movement()
 menuClass=Menu()
 # starting loop
 while running:
+
     interface=Interface()
     runSuccesful = False
     battleView = BattleView(occupied, runSuccesful)
@@ -150,9 +161,8 @@ while running:
         # occupied=True
         # hideAllCreatures(ogresList)
         # city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-    if ((not inCity) and (not inLevelUp) and (not inBlacksmith)):
+    if ((not inCity) and (not inLevelUp) and (not inBlacksmith) and (not isDead)):
         interface.showInterface(screen,player)
-
 
     cityOnMapRect=city.image.get_rect()
     cityOnMapRect.center = (width * 0.48, height *0.18)
@@ -229,11 +239,16 @@ while running:
             blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
             battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
+
     if player.hp <= 0:
         hideAllCreatures(ogresList)
-        background = pygame.image.load("Graphics/śmierć.png").convert()
+        blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        background = pygame.image.load("Graphics/deathscreen.png")
         background = pygame.transform.scale(background, (width, height))
-        occupied = True
+        isDead = True
+        occupied = False
+
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
         blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
@@ -254,7 +269,7 @@ while running:
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
-            player.gold=player.gold+random.randint(1,6)
+            player.gold=player.gold+random.randint(2,6)
 
 
     movement.startMovement(occupied,player_pos,dt,width,height)

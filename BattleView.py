@@ -50,8 +50,6 @@ class BattleView:
         screen.blit(playerHpImg, (width * 0.15, height * 0.23))
         screen.blit(enemyHpImg, (width * 0.785, height * 0.23))
 
-
-
         if attack:
             playerChanceToStrike = random.randint(0, player.agility)
             enemyChanceToDodge = random.randint(0, enemy.agility)
@@ -74,7 +72,7 @@ class BattleView:
             enemyChanceToStrike = random.randint(0, enemy.agility)
 
             if enemyChanceToStrike > playerChanceToDodge:
-                player.getDamage(enemy.strength)
+                player.getDamage(enemy.strength-player.armor)
 
                 enemy_comm = "Ogr atakuje"
                 e_comm_rect_center = (width / 2 * 0.85, height * 0.25)

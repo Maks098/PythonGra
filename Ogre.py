@@ -12,7 +12,7 @@ class Ogre():
         self.dt = dt
         self.hp=hp
         self.flag=flag
-        self.strength=4
+        self.strength=5
         self.agility=2
         self.maxhp=hp
         self.armor=1
