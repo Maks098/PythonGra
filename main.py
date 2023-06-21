@@ -150,7 +150,7 @@ while running:
         # occupied=True
         # hideAllCreatures(ogresList)
         # city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-    if ((not inCity) or (not inLevelUp==False)):
+    if ((not inCity) and (not inLevelUp) and (not inBlacksmith)):
         interface.showInterface(screen,player)
 
 
@@ -250,6 +250,7 @@ while running:
             ogresPos.remove(check.pos)
             ogresList.remove(check)
             showAllCreatures(ogresList)
+            blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
