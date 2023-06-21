@@ -1,10 +1,12 @@
 import pygame
-class Movement():
-    #def __init__(self):
 
-    def startMovement(self,occupied,player_pos,dt,width,height):
+
+class Movement():
+    # def __init__(self):
+
+    def startMovement(self, occupied, player_pos, dt, width, height):
         keys = pygame.key.get_pressed()
-        if occupied == False:
+        if not occupied:
             if keys[pygame.K_w]:
                 player_pos.y -= 300 * dt
             if keys[pygame.K_s]:

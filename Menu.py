@@ -1,9 +1,10 @@
 import pygame
 
+
 class Menu():
-    def menu(self,screen,resume,exitButton,occupied,menu):
-        width=screen.get_width()
-        height=screen.get_height()
+    def menu(self, screen, resume, exitButton, occupied, menu):
+        width = screen.get_width()
+        height = screen.get_height()
         pauseBackground = pygame.Surface((width, height))
         pauseBackground.set_alpha(150)
         pauseBackground.fill((0, 0, 0))

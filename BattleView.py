@@ -4,25 +4,24 @@ import pygame
 
 
 class BattleView:
-    def __init__(self, flag, runSuccesful,):
+    def __init__(self, flag, runSuccesful, ):
         self.flag = flag
         self.runSuccesful = runSuccesful
-        self.i=0
+        self.i = 0
 
-
-    def print_message(self,screen, font, communicate, comm_center):
-        display_duration = 0.5
+    def printMessage(self, screen, font, communicate, commCenter):
+        displayDuration = 0.5
         message = font.render(communicate, True, 'black')
-        comm_rect = message.get_rect()
-        comm_rect_center = (comm_center)
+        commRect = message.get_rect()
+        commRectCenter = (commCenter)
 
-        start_time = time.time()
-        elapsed_time = time.time() - start_time
+        startTime = time.time()
+        elapsedTime = time.time() - startTime
 
-        while elapsed_time < display_duration:
-            screen.blit(message, comm_rect_center)
+        while elapsedTime < displayDuration:
+            screen.blit(message, commRectCenter)
             pygame.display.flip()
-            elapsed_time = time.time() - start_time
+            elapsedTime = time.time() - startTime
 
     def startBattle(self, screen, player, enemy, enemyImg, attack, defend, runAttempt, runSuccesful):
 
@@ -61,44 +60,43 @@ class BattleView:
             if playerChanceToStrike > enemyChanceToDodge:
                 enemy.getDamage(player.strength)
 
-                player_comm = "Gracz zadal " + str(player.strength - enemy.armor) + " pkt. obrazen"
-                comm_rect_center = (width / 2 * 0.85, height * 0.2)
+                playerComm = "Gracz zadal " + str(player.strength - enemy.armor) + " pkt. obrazen"
+                commRectCenter = (width / 2 * 0.85, height * 0.2)
 
-                self.print_message(screen, font, player_comm, comm_rect_center)
+                self.printMessage(screen, font, playerComm, commRectCenter)
 
             else:
-                player_comm_miss = "Gracz chybil"
-                comm_rect_center_miss = (width / 2 * 0.85, height * 0.2)
+                playerCommMiss = "Gracz chybil"
+                commRectCenterMiss = (width / 2 * 0.85, height * 0.2)
 
-                self.print_message(screen, font, player_comm_miss, comm_rect_center_miss)
+                self.printMessage(screen, font, playerCommMiss, commRectCenterMiss)
 
             playerChanceToDodge = random.randint(0, player.agility)
             enemyChanceToStrike = random.randint(0, enemy.agility)
 
             if enemyChanceToStrike > playerChanceToDodge:
-                player.getDamage(enemy.strength-player.armor)
+                player.getDamage(enemy.strength - player.armor)
 
-                enemy_comm = "Przeciwnik atakuje"
-                e_comm_rect_center = (width / 2 * 0.85, height * 0.25)
+                enemyComm = "Przeciwnik atakuje"
+                eCommRectCenter = (width / 2 * 0.85, height * 0.25)
 
-                self.print_message(screen, font, enemy_comm, e_comm_rect_center)
-                self.i=self.i+1
+                self.printMessage(screen, font, enemyComm, eCommRectCenter)
+                self.i = self.i + 1
             else:
-                enemy_comm = "Przeciwnik nie trafia atakiem"
-                e_comm_rect_center = (width / 2 * 0.85, height * 0.25)
+                enemyComm = "Przeciwnik nie trafia atakiem"
+                eCommRectCenter = (width / 2 * 0.85, height * 0.25)
 
-                self.print_message(screen, font, enemy_comm, e_comm_rect_center)
+                self.printMessage(screen, font, enemyComm, eCommRectCenter)
                 self.i = self.i + 1
 
         if defend:
-            player.getDamage(enemy.strength-1)
+            player.getDamage(enemy.strength - 1)
             comm = "Gracz uzywa obrony"
-            comm_rect_center = (width / 2 * 0.85, height * 0.2)
+            commRectCenter = (width / 2 * 0.85, height * 0.2)
 
-            self.print_message(screen, font, comm, comm_rect_center)
-            self.i=self.i+1
+            self.printMessage(screen, font, comm, commRectCenter)
+            self.i = self.i + 1
 
         if runAttempt:
-
             player.player_pos.y = player.player_pos.y + 50
             self.runSuccesful = True

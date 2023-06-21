@@ -1,9 +1,10 @@
 import pygame
 
+
 class Interface():
-    def showInterface(self,screen,player):
-        width=screen.get_width()
-        height=screen.get_height()
+    def showInterface(self, screen, player):
+        width = screen.get_width()
+        height = screen.get_height()
         font = pygame.font.Font("Fonts/zx_spectrum-7_bold.ttf", 30)
         playerCurrentHpImg = font.render("Zycie: " + str(player.hp) + "/" + str(player.maxhp), True, "black")
         screen.blit(playerCurrentHpImg, (width * 0.03, height * 0.8))

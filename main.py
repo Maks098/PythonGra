@@ -11,13 +11,14 @@ import random
 from City import City
 from Movement import Movement
 
+
 def hideAllCreatures(list):
     for j in list:
         j.image = pygame.image.load("Graphics/blank.png").convert_alpha()
     player.image = pygame.image.load("Graphics/blank.png").convert_alpha()
 
 
-def showAllCreaturesOgre(list,list2):
+def showAllCreatures(list, list2):
     for j in list:
         j.image = pygame.image.load("Graphics/Ogre.png").convert_alpha()
 
@@ -26,14 +27,12 @@ def showAllCreaturesOgre(list,list2):
 
     player.image = pygame.image.load("Graphics/PlayerTest.png").convert_alpha()
 
-# def showAllCreaturesSkeleton(list):
-#         for j in list:
-#             j.image = pygame.image.load("Graphics/skeleton.png").convert_alpha()
-#         player.image = pygame.image.load("Graphics/PlayerTest.png").convert_alpha()
+
 def turnOnForSomeDt(forHowLong):
-    start=pygame.time.get_ticks()
-    if start+forHowLong>pygame.time.get_ticks():
-        pygame.draw.rect(screen,"black",(300,300,30,30))
+    start = pygame.time.get_ticks()
+    if start + forHowLong > pygame.time.get_ticks():
+        pygame.draw.rect(screen, "black", (300, 300, 30, 30))
+
 
 # pygame setup
 pygame.init()
@@ -47,22 +46,26 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 width = screen.get_width()
 height = screen.get_height()
 
+# ogres
 ogrepos = pygame.Vector2(width * 0.3, height * 0.65)
 ogrepos1 = pygame.Vector2(width * 0.6, height * 0.65)
 ogrepos2 = pygame.Vector2(width * 0.2, height * 0.2)
 ogrepos3 = pygame.Vector2(width * 0.8, height * 0.5)
 ogrepos4 = pygame.Vector2(width * 0.7, height * 0.1)
 
+# skeletons
 skeletonpos = pygame.Vector2(width * 0.1, height * 0.6)
 skeletonpos2 = pygame.Vector2(width * 0.2, height * 0.4)
 skeletonpos3 = pygame.Vector2(width * 0.9, height * 0.4)
 
 occupied = False
+
 # background setup
 background = pygame.image.load("Graphics/PytongProjekt.jpg")
 background = pygame.transform.scale(background, (width, height))
 pygame.display.flip()
 updated = 0
+
 # setup
 i = 0
 ogreHp = 15
@@ -70,37 +73,41 @@ skeletonHp = 10
 isFighting = False
 player = Player(player_pos, occupied)
 
+# enemy imgages
 ogreIMG = "Graphics/Ogre.png"
 skelIMG = "Graphics/skeleton.png"
 
+# create ogre list
 ogre = Ogre(ogrepos, dt, occupied, ogreHp)
 ogre1 = Ogre(ogrepos1, dt, occupied, ogreHp)
 ogre2 = Ogre(ogrepos2, dt, occupied, ogreHp)
 ogre3 = Ogre(ogrepos3, dt, occupied, ogreHp)
 ogre4 = Ogre(ogrepos4, dt, occupied, ogreHp)
-
 ogresList = [ogre, ogre1, ogre2, ogre3, ogre4]
 
+# create skeleton list
 skeleton = Skeleton(skeletonpos, dt, occupied, skeletonHp)
 skeleton2 = Skeleton(skeletonpos2, dt, occupied, skeletonHp)
 skeleton3 = Skeleton(skeletonpos3, dt, occupied, skeletonHp)
-
 skeletonList = [skeleton, skeleton2, skeleton3]
 
 city = City(screen)
 blacksmith = Blacksmith(screen)
 pygame.display.flip()
+
+# bools
 menu = False
 inCity = False
 inBlacksmith = False
-inLevelUp=False
+inLevelUp = False
 isDead = False
-movement=Movement()
-menuClass=Menu()
+movement = Movement()
+menuClass = Menu()
+
 # starting loop
 while running:
 
-    interface=Interface()
+    interface = Interface()
     runSuccesful = False
     battleView = BattleView(occupied, runSuccesful)
     click = False
@@ -114,8 +121,10 @@ while running:
     enteringBlacksmith = False
 
     screen.blit(background, (0, 0))
+
     # looking for events
     for event in pygame.event.get():
+
         # quitting game
         if event.type == pygame.QUIT:
             running = False
@@ -146,10 +155,9 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 occupied = not occupied
-                menu=not menu
+                menu = not menu
 
-       # pygame.draw.rect(screen,"black",(300,300,20,20))
-
+    # ogre movement
     ogresPos = [None] * len(ogresList)
 
     for q in range(len(ogresList)):
@@ -176,7 +184,7 @@ while running:
 
                 movement.ogre_movement(ogref.pos, width, height)
 
-
+    # skeleton movement
     skeletonPos = [None] * len(skeletonList)
 
     for a in range(len(skeletonList)):
@@ -202,22 +210,13 @@ while running:
                         skelm.pos.x += 200 * dt
 
                 movement.skel_movement(skelm.pos, width, height)
-
-    #if player.exp==3:
-        # inLevelUp=True
-        # background = pygame.image.load("Graphics/lvlup.png")
-        # background = pygame.transform.scale(background, (width, height))
-        # occupied=True
-        # hideAllCreatures(ogresList)
-        # city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-
-
+    # wyświetlanie statystyk
     if ((not inCity) and (not inLevelUp) and (not inBlacksmith) and (not isDead)):
-        interface.showInterface(screen,player)
+        interface.showInterface(screen, player)
 
-    cityOnMapRect=city.image.get_rect()
-    cityOnMapRect.center = (width * 0.48, height *0.18)
-    screen.blit(city.image,cityOnMapRect)
+    cityOnMapRect = city.image.get_rect()
+    cityOnMapRect.center = (width * 0.48, height * 0.18)
+    screen.blit(city.image, cityOnMapRect)
     screen.blit(player.image, player_pos)
 
     if not inCity:
@@ -225,20 +224,20 @@ while running:
                 player.player_pos.x <= width * 0.49) & (player.player_pos.y <= height * 0.21):
             enter = pygame.image.load("Graphics/enter.png").convert()
             enterRect = enter.get_rect()
-            enterRect.center = (width * 0.48, height *0.3)
-            screen.blit(enter,enterRect)
+            enterRect.center = (width * 0.48, height * 0.3)
+            screen.blit(enter, enterRect)
             if enteringCity:
                 inCity = True
     if inCity:
         hideAllCreatures(ogresList)
         hideAllCreatures(skeletonList)
         blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        city.enterCity(screen,attackOrHeal,defendOrUpgrade,runAttemptOrLeave,player,background)
-        occupied=True
+        city.enterCity(screen, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, player, background)
+        occupied = True
         background = pygame.image.load("Graphics/city.png").convert()
         background = pygame.transform.scale(background, (width, height))
         if runAttemptOrLeave:
-            showAllCreaturesOgre(ogresList,skeletonList)
+            showAllCreatures(ogresList, skeletonList)
             occupied = False
             blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
@@ -256,21 +255,21 @@ while running:
                 player.player_pos.x <= width * 0.81) & (player.player_pos.y <= height * 0.28):
             enter = pygame.image.load("Graphics/enter.png").convert()
             enterRect = enter.get_rect()
-            enterRect.center = (width * 0.8, height *0.35)
-            screen.blit(enter,enterRect)
+            enterRect.center = (width * 0.8, height * 0.35)
+            screen.blit(enter, enterRect)
             if enteringBlacksmith:
                 inBlacksmith = True
     if inBlacksmith:
         hideAllCreatures(ogresList)
         hideAllCreatures(skeletonList)
         city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        blacksmith.enter_blacksmith(screen, defendOrUpgrade, runAttemptOrLeave, player, background)
+        blacksmith.enterBlacksmith(screen, defendOrUpgrade, runAttemptOrLeave, player, background)
         occupied = True
         background = pygame.image.load("Graphics/blacksmith.png").convert()
         background = pygame.transform.scale(background, (width, height))
 
         if runAttemptOrLeave:
-            showAllCreaturesOgre(ogresList, skeletonList)
+            showAllCreatures(ogresList, skeletonList)
 
             occupied = False
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
@@ -293,7 +292,8 @@ while running:
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
-            battleView.startBattle(screen, player, ogre, ogreIMG, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
+            battleView.startBattle(screen, player, ogre, ogreIMG, attackOrHeal, defendOrUpgrade, runAttemptOrLeave,
+                                   runSuccesful)
 
     for b in range(len(skeletonList)):
         screen.blit(skeletonList[b].image, skeletonPos[b])
@@ -309,11 +309,11 @@ while running:
             city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
             occupied = True
-            battleView.startBattle(screen, player, skel, skelIMG, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
-
+            battleView.startBattle(screen, player, skel, skelIMG, attackOrHeal, defendOrUpgrade, runAttemptOrLeave,
+                                   runSuccesful)
 
     if battleView.runSuccesful:
-        showAllCreaturesOgre(ogresList, skeletonList)
+        showAllCreatures(ogresList, skeletonList)
 
         blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
         city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
@@ -328,12 +328,12 @@ while running:
             ogresList.sort(key=lambda x: x.hp)
             ogresPos.remove(check.pos)
             ogresList.remove(check)
-            showAllCreaturesOgre(ogresList,skeletonList)
+            showAllCreatures(ogresList, skeletonList)
             blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
-            player.gold=player.gold+random.randint(2,6)
+            player.gold = player.gold + random.randint(2, 6)
 
     for check in skeletonList:
         if check.hp <= 0:
@@ -342,14 +342,14 @@ while running:
             skeletonList.sort(key=lambda x: x.hp)
             skeletonPos.remove(check.pos)
             skeletonList.remove(check)
-            showAllCreaturesOgre(ogresList,skeletonList)
+            showAllCreatures(ogresList, skeletonList)
             blacksmith.image = pygame.image.load("Graphics/blacksmith_logo.png").convert_alpha()
             city.image = pygame.image.load("Graphics/cityImage.png").convert_alpha()
             background = pygame.image.load("Graphics/PytongProjekt.jpg")
             background = pygame.transform.scale(background, (width, height))
-            player.gold=player.gold+random.randint(2,6)
+            player.gold = player.gold + random.randint(2, 6)
 
-    movement.startMovement(occupied,player_pos,dt,width,height)
+    movement.startMovement(occupied, player_pos, dt, width, height)
 
     if menu:
         pauseBackground = pygame.Surface((width, height))
