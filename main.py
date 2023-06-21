@@ -240,14 +240,7 @@ while running:
             occupied = True
             battleView.startBattle(screen, player, ogre, attackOrHeal, defendOrUpgrade, runAttemptOrLeave, runSuccesful)
 
-    if player.hp <= 0:
-        hideAllCreatures(ogresList)
-        blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
-        background = pygame.image.load("Graphics/deathscreen.png")
-        background = pygame.transform.scale(background, (width, height))
-        isDead = True
-        occupied = False
+
 
     if battleView.runSuccesful:
         showAllCreatures(ogresList)
@@ -300,6 +293,15 @@ while running:
             menu = False
         elif exitButton:
             exit(0)
+
+    if player.hp <= 0:
+        hideAllCreatures(ogresList)
+        blacksmith.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        city.image = pygame.image.load("Graphics/blank.png").convert_alpha()
+        background = pygame.image.load("Graphics/deathscreen.png")
+        background = pygame.transform.scale(background, (width, height))
+        isDead = True
+        occupied = False
 
     pygame.display.flip()
 
