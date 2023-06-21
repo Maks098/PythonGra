@@ -132,7 +132,7 @@ while running:
             elif (mousePos[0] >= width * 0.44) & (mousePos[1] >= height * 0.47) & (mousePos[0] <= width * 0.56) & (
                     mousePos[1] <= height * 0.53):
                 resume = True
-            elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
+            elif (mousePos[0] >= width * 0.42) & (mousePos[1] >= height * 0.56) & (mousePos[0] <= width * 0.58) & (
                     mousePos[1] <= height * 0.62):
                 exitButton = True
             elif (mousePos[0] >= width * 0.40) & (mousePos[1] >= height * 0.25) & (mousePos[0] <= width * 0.56) & (
@@ -387,6 +387,13 @@ while running:
         background = pygame.transform.scale(background, (width, height))
         isDead = True
         occupied = False
+
+        exitImg = pygame.image.load("Graphics/exit.png").convert()
+        exitImg_rect = exitImg.get_rect()
+        exitImg_rect.center = (width / 2, height * 0.59)
+        screen.blit(exitImg, exitImg_rect)
+        if exitButton:
+            exit(0)
 
     pygame.display.flip()
 
