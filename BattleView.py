@@ -24,19 +24,23 @@ class BattleView:
             pygame.display.flip()
             elapsed_time = time.time() - start_time
 
-    def startBattle(self, screen, player, enemy, attack, defend, runAttempt, runSuccesful):
+    def startBattle(self, screen, player, enemy, enemyImg, attack, defend, runAttempt, runSuccesful):
 
         playerRatio = player.hp / player.maxhp
         enemyRatio = enemy.hp / enemy.maxhp
         width = screen.get_width()
         height = screen.get_height()
 
+        enemyImage = pygame.image.load(enemyImg)
+        enemyWidth = enemyImage.get_width()
+        enemyHeight = enemyImage.get_height()
+        enemyImgScaled = pygame.transform.scale(enemyImage, (enemyWidth * 10, enemyHeight * 10))
 
         screen.blit(pygame.image.load("Graphics/attack.png").convert(), (width * 0.1, height * 0.8))
         screen.blit(pygame.image.load("Graphics/defend.png").convert(), (width * 0.4, height * 0.8))
         screen.blit(pygame.image.load("Graphics/runAttempt.png").convert(), (width * 0.75, height * 0.8))
         screen.blit(pygame.image.load("Graphics/PlayerInFight.png").convert_alpha(), (width * 0.15, height * 0.5))
-        screen.blit(pygame.image.load("Graphics/OgreInFight.png").convert_alpha(), (width * 0.7, height * 0.4))
+        screen.blit(enemyImgScaled, (width * 0.7, height * 0.4))
 
         pygame.draw.rect(screen, "red", (width * 0.13, height * 0.23, width * 0.15, height * 0.04))
         pygame.draw.rect(screen, "green", (width * 0.13, height * 0.23, width * 0.15 * playerRatio, height * 0.04))
